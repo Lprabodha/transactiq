@@ -1,22 +1,23 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import "./globals.css"
-import { Providers } from "./providers"
-import { Toaster } from "@/components/ui/toaster"
+import type React from "react";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { Providers } from "./providers";
+import { Toaster } from "@/components/ui/toaster";
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "TransactIQ - AI-powered SaaS payment integration ",
-  description: "The all-in-one platform that helps teams collaborate, manage projects, and deliver results faster.",
-    generator: 'v0.dev'
-}
+  description:
+    "The all-in-one platform that helps teams collaborate, manage projects, and deliver results faster.",
+  generator: "Devzer Studios",
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -27,9 +28,7 @@ export default function RootLayout({
         </Providers>
       </body>
     </html>
-  )
+  );
 }
 
-
-
-import './globals.css'
+import "./globals.css";
