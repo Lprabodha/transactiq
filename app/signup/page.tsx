@@ -11,7 +11,7 @@ export default function SignupPage() {
           <div className="flex justify-center">
             <Link href="/" className="flex items-center gap-2">
               <Image src="/placeholder.svg?height=32&width=32" alt="Logo" width={32} height={32} />
-              <span className="text-xl font-bold">SaaSify</span>
+              <span className="text-xl font-bold">TransactIQ</span>
             </Link>
           </div>
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight">Create your account</h2>

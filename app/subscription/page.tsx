@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { SubscriptionForm } from "@/app/subscription/subscription-form"
 
 export const metadata: Metadata = {
-  title: "Choose Your Subscription | SaaSify",
+  title: "Choose Your Subscription | TransactIQ",
   description: "Select the subscription plan that works best for you and your team.",
 }
 

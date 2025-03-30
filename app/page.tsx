@@ -14,7 +14,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-2">
             <Image src="/placeholder.svg?height=32&width=32" alt="Logo" width={32} height={32} />
             <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
-              SaaSify
+              TransactIQ
             </span>
           </div>
           <nav className="hidden gap-6 md:flex">
@@ -888,7 +888,7 @@ export default function LandingPage() {
               <div className="flex items-center gap-2">
                 <Image src="/placeholder.svg?height=32&width=32" alt="Logo" width={32} height={32} />
                 <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
-                  SaaSify
+                  TransactIQ
                 </span>
               </div>
               <p className="text-sm text-muted-foreground">
@@ -967,7 +967,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="mt-8 border-t pt-8 text-center text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} SaaSify. All rights reserved.
+            &copy; {new Date().getFullYear()} TransactIQ. All rights reserved.
           </div>
         </div>
       </footer>

@@ -41,7 +41,7 @@ export function LoginForm() {
     // For demo purposes, just show a success toast and redirect
     toast({
       title: "Login successful",
-      description: "Welcome back to SaaSify!",
+      description: "Welcome back to TransactIQ!",
     })
 
     router.push("/dashboard")

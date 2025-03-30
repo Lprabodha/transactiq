@@ -5,7 +5,7 @@ import { DashboardContent } from "@/app/dashboard/dashboard-content"
 export default function DashboardPage() {
   return (
     <DashboardShell>
-      <DashboardHeader heading="Dashboard" text="Welcome to your SaaSify dashboard." />
+      <DashboardHeader heading="Dashboard" text="Welcome to your TransactIQ dashboard." />
       <DashboardContent />
     </DashboardShell>
   )

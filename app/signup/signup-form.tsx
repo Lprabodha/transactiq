@@ -49,7 +49,7 @@ export function SignupForm() {
     // For demo purposes, just show a success toast and redirect
     toast({
       title: "Account created",
-      description: "Welcome to SaaSify! Let's set up your subscription.",
+      description: "Welcome to TransactIQ! Let's set up your subscription.",
     })
 
     router.push("/subscription")
