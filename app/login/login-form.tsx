@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"
+import { loginUser } from "@/app/actions/auth"
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -21,6 +22,7 @@ export function LoginForm() {
   const router = useRouter()
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
+  const [serverError, setServerError] = useState<string | null>(null)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -32,24 +34,45 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
+    setServerError(null)
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    const formData = new FormData()
+    formData.append("email", values.email)
+    formData.append("password", values.password)
 
-    setIsLoading(false)
+    try {
+      const result = await loginUser(formData)
 
-    // For demo purposes, just show a success toast and redirect
-    toast({
-      title: "Login successful",
-      description: "Welcome back to TransactIQ!",
-    })
-
-    router.push("/dashboard")
+      if (result?.error) {
+        setServerError(result.error)
+        toast({
+          variant: "destructive",
+          title: "Login failed",
+          description: result.error,
+        })
+      } else {
+        toast({
+          title: "Login successful",
+          description: "Welcome back to SaaSify!",
+        })
+      }
+    } catch (error) {
+      console.error("Login error:", error)
+      setServerError("An unexpected error occurred. Please try again.")
+      toast({
+        variant: "destructive",
+        title: "Login failed",
+        description: "An unexpected error occurred. Please try again.",
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {serverError && <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">{serverError}</div>}
         <FormField
           control={form.control}
           name="email"

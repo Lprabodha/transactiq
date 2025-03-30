@@ -6,6 +6,7 @@ import { CreditCard, Home, LifeBuoy, LogOut, Settings, User } from "lucide-react
 
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { logoutUser } from "@/app/actions/auth"
 
 export function DashboardNav() {
   const pathname = usePathname()
@@ -37,7 +38,7 @@ export function DashboardNav() {
     <div className="flex h-full flex-col border-r bg-muted/40">
       <div className="flex h-14 items-center border-b px-4">
         <Link href="/" className="flex items-center gap-2 font-semibold">
-          <span className="text-lg font-bold">TransactIQ</span>
+          <span className="text-lg font-bold">SaaSify</span>
         </Link>
       </div>
       <div className="flex-1 overflow-auto py-2">
@@ -70,12 +71,12 @@ export function DashboardNav() {
             Help & Support
           </Link>
           <Separator />
-          <Button variant="ghost" className="flex items-center gap-3 px-3 py-2 justify-start" asChild>
-            <Link href="/">
+          <form action={logoutUser}>
+            <Button variant="ghost" className="flex items-center gap-3 px-3 py-2 justify-start w-full" type="submit">
               <LogOut className="h-4 w-4" />
               Log out
-            </Link>
-          </Button>
+            </Button>
+          </form>
         </nav>
       </div>
     </div>
