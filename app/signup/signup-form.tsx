@@ -63,7 +63,7 @@ export function SignupForm() {
       } else {
         toast({
           title: "Account created",
-          description: "Welcome to SaaSify! Redirecting to your dashboard...",
+          description: "Welcome to TransactIQ! Redirecting to your dashboard...",
         })
 
         if (result.redirectUrl) {

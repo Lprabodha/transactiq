@@ -51,9 +51,16 @@ export function LoginForm() {
           description: result.error,
         })
       } else {
+
+        if (result.redirectUrl) {
+          router.push(result.redirectUrl)
+        } else {
+          router.push("/dashboard")
+        }
+
         toast({
           title: "Login successful",
-          description: "Welcome back to SaaSify!",
+          description: "Welcome back to TransactIQ!",
         })
       }
     } catch (error) {

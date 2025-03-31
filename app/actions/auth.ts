@@ -28,14 +28,11 @@ export async function registerUser(formData: FormData) {
   try {
     await createUser({ name, email, password })
 
-       return await loginUser(
-      new FormData(
-        Object.entries({ email, password }).reduce((form, [key, value]) => {
-          form.append(key, value)
-          return form
-        }, new FormData()),
-      ),
-    )
+    const loginFormData = new FormData()
+    loginFormData.append("email", email)
+    loginFormData.append("password", password)
+
+    return await loginUser(loginFormData)
 
   } catch (error: any) {
     console.error("Registration error:", error)
@@ -47,6 +44,7 @@ export async function registerUser(formData: FormData) {
     return { error: "Failed to register user" }
   }
 }
+
 
 export async function loginUser(formData: FormData) {
   const email = formData.get("email") as string
