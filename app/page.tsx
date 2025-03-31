@@ -303,7 +303,7 @@ export default function LandingPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    Predicts next month's revenue per customer using regression models, helping you plan and grow your
+                    Predicts next month&apos;s revenue per customer using regression models, helping you plan and grow your
                     business.
                   </p>
                   <ul className="mt-4 space-y-2">
@@ -743,7 +743,7 @@ export default function LandingPage() {
                 </div>
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">What our customers say</h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Don't just take our word for it. Here's what our customers have to say about our platform.
+                  Don&apos;t just take our word for it. Here&apos;s what our customers have to say about our platform.
                 </p>
               </div>
             </div>
@@ -778,7 +778,8 @@ export default function LandingPage() {
                   <CardContent className="p-6">
                     <div className="flex flex-col gap-4">
                       <div className="flex-1">
-                        <p className="text-muted-foreground">"{testimonial.quote}"</p>
+                      <p className="text-muted-foreground">&quot;{testimonial.quote}&quot;</p>
+
                       </div>
                       <div className="flex items-center gap-4">
                         <Image

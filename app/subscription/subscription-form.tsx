@@ -207,7 +207,7 @@ export function SubscriptionForm() {
             </div>
 
             <div className="space-y-3 md:space-y-4">
-              {plans.map((plan, index) => (
+              {plans.map((plan) => (
                 <div
                   key={plan.id}
                   className={`flex flex-col space-y-2 md:space-y-3 rounded-md border-2 p-3 md:p-4 hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 cursor-pointer transition-all ${

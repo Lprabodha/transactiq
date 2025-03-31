@@ -29,7 +29,6 @@ export function ForgotPasswordForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
 
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
     setIsLoading(false)
@@ -45,8 +44,8 @@ export function ForgotPasswordForm() {
     <>
       {isSubmitted ? (
         <div className="text-center">
-          <p className="mb-4">We've sent a password reset link to your email address. Please check your inbox.</p>
-          <p className="text-sm text-muted-foreground">If you don't see the email, check your spam folder.</p>
+          <p className="mb-4">We&quot;ve sent a password reset link to your email address. Please check your inbox.</p>
+          <p className="text-sm text-muted-foreground">If you don&quot;t see the email, check your spam folder.</p>
         </div>
       ) : (
         <Form {...form}>

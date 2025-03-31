@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { validateUser } from "@/lib/models/user"
 import { cookies } from "next/headers"
 import { SignJWT } from "jose"
-import { UserValidationError } from "@/lib/exceptions"
+import { ValidationError } from "@/lib/exceptions"
 
 const JWT_EXPIRATION = "7d"
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7 
@@ -20,12 +20,12 @@ export async function POST(request: NextRequest) {
     const { email, password } = requestBody
 
     if (!email || !password) {
-      throw new UserValidationError("Email and password are required")
+      throw new ValidationError("Email and password are required")
     }
 
     const user = await validateUser(email, password)
     if (!user) {
-      throw new UserValidationError("Invalid email or password")
+      throw new ValidationError("Invalid email or password")
     }
 
     const token = await createJwtToken({
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Login error:", error)
     
-    if (error instanceof UserValidationError) {
+    if (error instanceof ValidationError) {
       return NextResponse.json(
         { error: error.message }, 
         { status: 400 }

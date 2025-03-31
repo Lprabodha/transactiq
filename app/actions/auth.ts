@@ -1,9 +1,9 @@
 "use server"
 
 import { cookies } from "next/headers"
-import { redirect } from "next/navigation"
 import { createUser, validateUser } from "@/lib/models/user"
-import { SignJWT, jwtVerify } from "jose"
+import { SignJWT } from "jose"
+import { jwtVerify } from "jose" 
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "your-secret-key")
 
@@ -96,23 +96,22 @@ export async function logoutUser() {
 }
 
 export async function getCurrentUser() {
-  const token = cookies().get("auth_token")?.value
+  const cookieStore = await cookies() 
+  const token = cookieStore.get("auth_token")?.value 
+
 
   if (!token) {
     return null
   }
 
   try {
-    const decoded = verify(token, JWT_SECRET) as {
-      id: string
-      email: string
-      name: string
-    }
+    const decoded = await jwtVerify(token, JWT_SECRET) 
+    const { id, email, name } = decoded.payload as { id: string, email: string, name: string }
 
     return {
-      id: decoded.id,
-      email: decoded.email,
-      name: decoded.name,
+      id,
+      email,
+      name,
     }
   } catch (error) {
     console.error("Token verification error:", error)
