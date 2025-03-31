@@ -106,12 +106,13 @@ export async function getCurrentUser() {
 
   try {
     const decoded = await jwtVerify(token, JWT_SECRET) 
-    const { id, email, name } = decoded.payload as { id: string, email: string, name: string }
+    const { id, email, name, plan_id } = decoded.payload as { id: string, email: string, name: string , plan_id:number}
 
     return {
       id,
       email,
       name,
+      plan_id
     }
   } catch (error) {
     console.error("Token verification error:", error)

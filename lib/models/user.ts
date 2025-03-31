@@ -7,6 +7,10 @@ export interface User {
   name: string
   email: string
   password: string
+  plan_id: number
+  plan_expire_date: string 
+  subscription_id?: string | null
+  stripe_customer_id?: string | null
   createdAt: Date
   updatedAt: Date
 }
@@ -50,10 +54,15 @@ export async function createUser(userData: Omit<User, '_id' | 'createdAt' | 'upd
 
     const hashedPassword = await bcrypt.hash(userData.password, 10)
 
+    const planExpireDate = new Date();
+    planExpireDate.setDate(planExpireDate.getDate() + 7);
+
     const result = await users.insertOne({
       ...userData,
       email: userData.email.toLowerCase(),
+      plan_id: 0,
       password: hashedPassword,
+      plan_expire_date: planExpireDate.toISOString(),
       createdAt: new Date(),
       updatedAt: new Date()
     })
@@ -86,4 +95,18 @@ export async function validateUser(email: string, password: string) {
     console.error('Error validating user:', error)
     throw new Error('Failed to validate user')
   }
+}
+
+export async function getUserById(id: string) {
+  const users = await getUserCollection()
+  const objectId = new ObjectId(id)
+  const user = await users.findOne({ _id: objectId })
+
+  if (!user) {
+    return null
+  }
+
+  const { password: _, ...userWithoutPassword } = user
+
+  return userWithoutPassword
 }

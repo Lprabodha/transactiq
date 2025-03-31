@@ -3,8 +3,24 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DashboardHeader } from "@/app/dashboard/dashboard-header"
 import { DashboardShell } from "@/app/dashboard/dashboard-shell"
+import { getCurrentUser } from "@/app/actions/auth"
+import { getUserById } from "@/lib/models/user"
+import { redirect } from "next/navigation"
 
-export default function BillingPage() {
+
+export default async function BillingPage() {
+
+  const currentUser = await getCurrentUser()
+
+  if (!currentUser) {
+    redirect("/login")
+  }
+
+    const userData = await getUserById(currentUser.id)
+    if (!userData?.plan_id || userData.plan_id === 0) {
+      redirect("/subscription")
+    }
+
   return (
     <DashboardShell>
       <DashboardHeader heading="Billing" text="Manage your subscription and billing information." />

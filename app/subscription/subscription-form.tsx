@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Check, ArrowRight, Shield } from "lucide-react"
 import Image from "next/image"
@@ -9,78 +9,55 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useToast } from "@/components/ui/use-toast"
+import { createCheckoutSession, getOrCreateStripeCustomer } from "./actions"
+
 
 const plans = [
   {
-    id: "starter",
-    name: "Starter",
-    description: "Perfect for individuals and small teams just getting started.",
-    features: ["Up to 5 team members", "5GB storage", "Basic fraud detection", "24/7 support"],
-    prices: {
-      monthly: "$29",
-      quarterly: "$79",
-      annual: "$290",
-    },
+    id: "monthly",
+    name: "Monthly",
+    price: "$49.95",
+    cycle: "mo",
+    description: "Invoiced every month",
+    features: ["All basic features", "Flexible monthly billing", "Cancel anytime"],
   },
   {
-    id: "professional",
-    name: "Professional",
-    description: "Ideal for growing teams that need more features and flexibility.",
-    features: [
-      "Up to 20 team members",
-      "50GB storage",
-      "Advanced fraud detection",
-      "Chargeback prediction",
-      "Smart payment routing",
-      "Priority support",
-    ],
-    prices: {
-      monthly: "$79",
-      quarterly: "$199",
-      annual: "$790",
-    },
+    id: "annual",
+    name: "Annually",
+    price: "$19.95",
+    cycle: "mo",
+    description: "Invoiced every year",
+    features: ["All premium features", "60% savings", "Billed annually"],
+    savings: "60%",
   },
   {
-    id: "enterprise",
-    name: "Enterprise",
-    description: "For large organizations with advanced needs and dedicated support.",
-    features: [
-      "Unlimited team members",
-      "500GB storage",
-      "Enterprise fraud detection",
-      "Chargeback prediction",
-      "Smart payment routing",
-      "Revenue forecasting",
-      "Dedicated support",
-      "Custom integrations",
-    ],
-    prices: {
-      monthly: "$149",
-      quarterly: "$399",
-      annual: "$1,490",
-    },
+    id: "quarterly",
+    name: "Quarterly",
+    price: "$29.95",
+    cycle: "mo",
+    description: "Invoiced each quarter",
+    features: ["All premium features", "Balance of flexibility & savings", "Billed quarterly"],
   },
 ]
 
-// Payment gateway options with features
 const paymentGateways = {
   stripe: {
     name: "Stripe",
-    logo: "/placeholder.svg?height=30&width=60",
+    logo: "/images/stripe-logo.svg",
     redirectUrl: "https://checkout.stripe.com/c/pay/mock_checkout",
     features: ["Fast processing", "Global coverage", "Strong security"],
     color: "border-purple-200 hover:border-purple-400",
   },
   paypal: {
     name: "PayPal",
-    logo: "/placeholder.svg?height=30&width=60",
+    logo: "/images/paypal-logo.svg",
     redirectUrl: "https://www.paypal.com/checkout/mock",
     features: ["Trusted brand", "Buyer protection", "Easy integration"],
     color: "border-blue-200 hover:border-blue-400",
   },
   solidgate: {
     name: "Solidgate",
-    logo: "/placeholder.svg?height=30&width=60",
+    logo: "/images/solidgate-logo.svg",
     redirectUrl: "https://checkout.solidgate.com/payment/mock_checkout",
     features: ["High approval rates", "Advanced fraud tools", "Multiple currencies"],
     color: "border-indigo-200 hover:border-indigo-400",
@@ -91,10 +68,32 @@ export function SubscriptionForm() {
   const router = useRouter()
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
-  const [currentStep, setCurrentStep] = useState<"plan" | "payment">("plan")
   const [billingCycle, setBillingCycle] = useState<"monthly" | "quarterly" | "annual">("monthly")
-  const [selectedPlan, setSelectedPlan] = useState<string>("professional")
+  const [currentStep, setCurrentStep] = useState<"plan" | "payment">("plan")
+  const [selectedPlan, setSelectedPlan] = useState<string>("annual") 
   const [selectedGateway, setSelectedGateway] = useState<"stripe" | "paypal" | "solidgate">("stripe")
+  const [stripeCustomerId, setStripeCustomerId] = useState<string | null>(null)
+
+
+  useEffect(() => {
+    async function initializeStripeCustomer() {
+      try {
+        const { customerId, error } = await getOrCreateStripeCustomer()
+
+        if (error) {
+          console.error("Error initializing Stripe customer:", error)
+        } else if (customerId) {
+          setStripeCustomerId(customerId)
+          console.log("Stripe customer initialized:", customerId)
+        }
+      } catch (error) {
+        console.error("Failed to initialize Stripe customer:", error)
+      }
+    }
+
+    initializeStripeCustomer()
+  }, [])
+
 
   function handlePlanContinue() {
     setCurrentStep("payment")
@@ -103,28 +102,26 @@ export function SubscriptionForm() {
   async function handlePaymentRedirect() {
     setIsLoading(true)
 
-    // Simulate a brief loading state before redirect
+    const formData = new FormData()
+    formData.append("plan", selectedPlan)
+    formData.append("billingCycle", billingCycle)
+    formData.append("gateway", selectedGateway)
+
     await new Promise((resolve) => setTimeout(resolve, 800))
 
     const plan = plans.find((p) => p.id === selectedPlan)
 
-    // Show toast before redirecting
     toast({
       title: "Redirecting to payment",
       description: `You'll be redirected to ${paymentGateways[selectedGateway].name} to complete your ${plan?.name} plan purchase.`,
     })
 
-    // In a real app, you would generate a checkout session server-side
-    // and redirect to the actual checkout URL with proper parameters
+    await createCheckoutSession(formData)
 
-    // Simulate redirect by showing loading state for a moment
+
     setTimeout(() => {
       setIsLoading(false)
-      // For demo purposes, redirect to dashboard instead of actual payment gateway
       router.push("/dashboard")
-
-      // In a real app, you would redirect to the payment gateway:
-      // window.location.href = paymentGateways[selectedGateway].redirectUrl
     }, 1500)
   }
 
@@ -175,70 +172,40 @@ export function SubscriptionForm() {
             <p className="text-xs text-muted-foreground md:text-sm">Select the plan that works best for you.</p>
           </div>
 
-          <div className="flex flex-col space-y-4">
-            <div className="inline-flex rounded-md border p-1 bg-gradient-to-r from-purple-50 to-blue-50">
-              <button
-                type="button"
-                className={`flex-1 rounded-sm px-2 py-1.5 text-xs md:px-3 md:py-2 md:text-sm font-medium ${
-                  billingCycle === "monthly" ? "bg-gradient-to-r from-purple-600 to-blue-500 text-white" : ""
+          <div className="grid gap-4 md:grid-cols-3">
+            {plans.map((plan) => (
+              <Card
+                key={plan.id}
+                className={`border-2 cursor-pointer transition-all hover:shadow-md ${
+                  selectedPlan === plan.id ? "border-purple-500 shadow-md" : "border-gray-200"
                 }`}
-                onClick={() => setBillingCycle("monthly")}
+                onClick={() => setSelectedPlan(plan.id)}
               >
-                Monthly
-              </button>
-              <button
-                type="button"
-                className={`flex-1 rounded-sm px-2 py-1.5 text-xs md:px-3 md:py-2 md:text-sm font-medium ${
-                  billingCycle === "quarterly" ? "bg-gradient-to-r from-purple-600 to-blue-500 text-white" : ""
-                }`}
-                onClick={() => setBillingCycle("quarterly")}
-              >
-                Quarterly
-              </button>
-              <button
-                type="button"
-                className={`flex-1 rounded-sm px-2 py-1.5 text-xs md:px-3 md:py-2 md:text-sm font-medium ${
-                  billingCycle === "annual" ? "bg-gradient-to-r from-purple-600 to-blue-500 text-white" : ""
-                }`}
-                onClick={() => setBillingCycle("annual")}
-              >
-                Annual
-              </button>
-            </div>
-
-            <div className="space-y-3 md:space-y-4">
-              {plans.map((plan) => (
-                <div
-                  key={plan.id}
-                  className={`flex flex-col space-y-2 md:space-y-3 rounded-md border-2 p-3 md:p-4 hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 cursor-pointer transition-all ${
-                    selectedPlan === plan.id ? "border-purple-500 shadow-md" : "border-gray-200 border-gray-800"
-                  }`}
-                  onClick={() => setSelectedPlan(plan.id)}
-                >
-                  <div className="flex justify-between">
-                    <span
-                      className={`text-sm font-medium md:text-base ${
-                        selectedPlan === plan.id
-                          ? "bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent"
-                          : ""
-                      }`}
-                    >
-                      {plan.name}
-                    </span>
-                    <span className="text-sm font-medium md:text-base">{plan.prices[billingCycle]}</span>
+                <CardContent className="p-4 md:p-6">
+                  <div className="flex flex-col space-y-3">
+                    {plan.savings && (
+                      <div className="text-xs font-semibold text-purple-600 md:text-sm">
+                        Save {plan.savings}
+                      </div>
+                    )}
+                    <h3 className="text-lg font-semibold">{plan.name}</h3>
+                    <div className="flex items-end gap-1">
+                      <span className="text-2xl font-bold">{plan.price}</span>
+                      <span className="text-sm text-muted-foreground">/{plan.cycle}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground md:text-sm">{plan.description}</p>
+                    <ul className="space-y-2 pt-2 text-xs text-muted-foreground md:text-sm">
+                      {plan.features.map((feature, i) => (
+                        <li key={i} className="flex items-start gap-2">
+                          <Check className="h-3 w-3 md:h-4 md:w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <span className="text-xs text-muted-foreground md:text-sm">{plan.description}</span>
-                  <ul className="space-y-1 text-xs text-muted-foreground md:text-sm">
-                    {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-center gap-2">
-                        <Check className="h-3 w-3 md:h-4 md:w-4 text-green-500 flex-shrink-0" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
 
           <div className="flex justify-end pt-2">
@@ -323,8 +290,8 @@ export function SubscriptionForm() {
                   <span className="text-xs font-medium md:text-sm">{activePlan?.name}</span>
                 </div>
                 <div className="flex justify-between mb-1 md:mb-2">
-                  <span className="text-xs md:text-sm">Billing cycle</span>
-                  <span className="text-xs font-medium capitalize md:text-sm">{billingCycle}</span>
+                  <span className="text-xs md:text-sm">Billing</span>
+                  <span className="text-xs font-medium md:text-sm">{activePlan?.description}</span>
                 </div>
                 <div className="flex justify-between mb-1 md:mb-2">
                   <span className="text-xs md:text-sm">Payment method</span>
@@ -334,7 +301,7 @@ export function SubscriptionForm() {
                 <div className="flex justify-between">
                   <span className="text-sm font-medium">Total</span>
                   <span className="text-sm font-medium bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
-                    {activePlan?.prices[billingCycle]}
+                    {activePlan?.price}/{activePlan?.cycle}
                   </span>
                 </div>
               </div>
@@ -364,4 +331,3 @@ export function SubscriptionForm() {
     </div>
   )
 }
-
