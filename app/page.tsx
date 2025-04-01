@@ -12,7 +12,9 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
-            <Image src="/placeholder.svg?height=32&width=32" alt="Logo" width={32} height={32} />
+            <div className="h-8 w-8 rounded-md bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center text-white font-bold text-sm">
+              TIQ
+            </div>
             <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
               TransactIQ
             </span>
@@ -303,8 +305,8 @@ export default function LandingPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    Predicts next month&apos;s revenue per customer using regression models, helping you plan and grow your
-                    business.
+                    Predicts next month&apos;s revenue per customer using regression models, helping you plan and grow
+                    your business.
                   </p>
                   <ul className="mt-4 space-y-2">
                     <li className="flex items-center gap-2">
@@ -778,8 +780,7 @@ export default function LandingPage() {
                   <CardContent className="p-6">
                     <div className="flex flex-col gap-4">
                       <div className="flex-1">
-                      <p className="text-muted-foreground">&quot;{testimonial.quote}&quot;</p>
-
+                        <p className="text-muted-foreground">&quot;{testimonial.quote}&quot;</p>
                       </div>
                       <div className="flex items-center gap-4">
                         <Image
@@ -887,7 +888,9 @@ export default function LandingPage() {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <Image src="/placeholder.svg?height=32&width=32" alt="Logo" width={32} height={32} />
+                <div className="h-8 w-8 rounded-md bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center text-white font-bold text-sm">
+                  TIQ
+                </div>
                 <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
                   TransactIQ
                 </span>

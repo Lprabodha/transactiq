@@ -7,8 +7,14 @@ import clientPromise from "@/lib/mongodb"
 import Stripe from "stripe"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2023-10-16", 
+  apiVersion: "2023-10-16",
 })
+
+function getDatabaseName(uri: string): string {
+  const parts = uri.split('/')
+  return parts[parts.length - 1] || 'transactIQ'
+}
+
 
 export async function getOrCreateStripeCustomer() {
   try {
@@ -19,10 +25,14 @@ export async function getOrCreateStripeCustomer() {
     }
 
     const client = await clientPromise
-    const db = client.db(process.env.MONGODB_URI || "saasify")
+    const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/transactIQ'
+    const dbName = getDatabaseName(uri)
+    const db = client.db(dbName)
     const usersCollection = db.collection("users")
 
-    const user = await usersCollection.findOne({ _id: new ObjectId(currentUser.id) })
+    const user = await usersCollection.findOne({
+      _id: new ObjectId(currentUser.id)
+    })
 
     if (!user) {
       return { error: "User not found" }
@@ -37,6 +47,7 @@ export async function getOrCreateStripeCustomer() {
       name: user.name,
       metadata: {
         userId: currentUser.id,
+        user_email: user.email
       },
     })
 
@@ -47,7 +58,7 @@ export async function getOrCreateStripeCustomer() {
           stripe_customer_id: customer.id,
           updatedAt: new Date(),
         },
-      },
+      }
     )
 
     return { customerId: customer.id }
@@ -79,76 +90,46 @@ export async function createCheckoutSession(formData: FormData) {
       throw new Error(error || "Failed to get or create Stripe customer")
     }
 
-    let planId = 0
+    let priceId = process.env.STRIPE_PRICE_1_ID
 
     switch (plan) {
       case "monthly":
-        planId = 1
+        priceId = process.env.STRIPE_PRICE_1_ID
         break
       case "quarterly":
-        planId = 2
+        priceId = process.env.STRIPE_PRICE_3_ID
         break
       case "annual":
-        planId = 3
+        priceId = process.env.STRIPE_PRICE_12_ID
         break
       default:
-        planId = 0
+        priceId = process.env.STRIPE_PRICE_1_ID
     }
-
-    const now = new Date()
-    const expirationDate = new Date()
-
-    switch (billingCycle) {
-      case "monthly":
-        expirationDate.setMonth(now.getMonth() + 1)
-        break
-      case "quarterly":
-        expirationDate.setMonth(now.getMonth() + 3)
-        break
-      case "annual":
-        expirationDate.setFullYear(now.getFullYear() + 1)
-        break
-    }
-
-    const client = await clientPromise
-    const db = client.db(process.env.MONGODB_DB || "saasify")
-    const usersCollection = db.collection("users")
-
-    await usersCollection.updateOne(
-      { _id: new ObjectId(currentUser.id) },
-      {
-        $set: {
-          plan_id: planId,
-          plan_expire_date: expirationDate,
-          updatedAt: new Date(),
-        },
-      },
-    )
 
     if (gateway === "stripe") {
-      // In a real app, you would use actual price IDs from your Stripe account
-      // For demo purposes, we'll redirect to the dashboard
-      // This is where you would create a Stripe checkout session
-      // const session = await stripe.checkout.sessions.create({
-      //   customer: customerId,
-      //   line_items: [
-      //     {
-      //       price: priceId,
-      //       quantity: 1,
-      //     },
-      //   ],
-      //   mode: 'subscription',
-      //   success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true`,
-      //   cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription?canceled=true`,
-      // })
-      // return { sessionId: session.id, url: session.url }
+      const session = await stripe.checkout.sessions.create({
+        customer: customerId,
+        payment_method_types: ['card'],
+        line_items: [{
+          price: priceId,
+          quantity: 1,
+        }],
+        mode: 'subscription',
+        billing_address_collection: 'required',
+        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true`,
+        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription?canceled=true`,
+      })
+
+      if (session.url) {
+        return { url: session.url };
+      }
+    } else if (gateway == 'solidgate') {
+      return { url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true` };
     }
 
-    // For demo purposes:
-    redirect("/dashboard")
+    return { url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard` };
   } catch (error) {
     console.error("Error creating checkout session:", error)
     throw new Error("Failed to create checkout session")
   }
 }
-
