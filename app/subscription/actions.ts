@@ -140,15 +140,19 @@ export async function createCheckoutSession(formData: FormData) {
       }
     } else if (gateway == 'solidgate') {
       const merchantData = solidgateApi.formMerchantData({
-        amount: amount * 100, 
         currency: 'USD',
         customer_email: currentUser.email,
+        customer_account_id: `${Date.now()}`,
         order_description: `${plan} subscription`,
         order_id: `${Date.now()}`,
         platform: 'WEB',
         geo_country: 'ESP',
+        type: 'auth',
+        amount: amount,
         form_design_name: 'form-design',
-        subscription_plan_id: solidgatePriceId,
+        product_price_id: solidgatePriceId,
+        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true`,
+        fail_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription?canceled=true`,
       })
 
       return {

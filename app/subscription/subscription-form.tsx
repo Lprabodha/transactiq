@@ -1,40 +1,119 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { Check, ArrowRight, Shield, Star, Calendar, CreditCard, Sparkles, Clock, X } from "lucide-react"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { useToast } from "@/components/ui/use-toast"
-import { createCheckoutSession, getOrCreateStripeCustomer } from "./actions"
-import { Badge } from "@/components/ui/badge"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Check,
+  ArrowRight,
+  Shield,
+  Star,
+  Calendar,
+  CreditCard,
+  Sparkles,
+  Clock,
+  X,
+} from "lucide-react";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useToast } from "@/components/ui/use-toast";
+import { createCheckoutSession, getOrCreateStripeCustomer } from "./actions";
+import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const PLANS = [
-  { id: "monthly", name: "Monthly", price: "$49.95", cycle: "mo", description: "Invoiced every month", features: ["All basic features", "Flexible monthly billing", "Cancel anytime"], icon: Calendar, color: "from-blue-500 to-blue-600" },
-  { id: "annual", name: "Annually", price: "$19.95", cycle: "mo", description: "Invoiced every year", features: ["All premium features", "60% savings", "Billed annually"], savings: "60%", icon: Star, color: "from-purple-600 to-indigo-600", recommended: true },
-  { id: "quarterly", name: "Quarterly", price: "$29.95", cycle: "mo", description: "Invoiced each quarter", features: ["All premium features", "Balance of flexibility & savings", "Billed quarterly"], icon: Clock, color: "from-indigo-500 to-indigo-600" },
-] as const
+  {
+    id: "monthly",
+    name: "Monthly",
+    price: "$49.95",
+    cycle: "mo",
+    description: "Invoiced every month",
+    features: [
+      "All basic features",
+      "Flexible monthly billing",
+      "Cancel anytime",
+    ],
+    icon: Calendar,
+    color: "from-blue-500 to-blue-600",
+  },
+  {
+    id: "annual",
+    name: "Annually",
+    price: "$19.95",
+    cycle: "mo",
+    description: "Invoiced every year",
+    features: ["All premium features", "60% savings", "Billed annually"],
+    savings: "60%",
+    icon: Star,
+    color: "from-purple-600 to-indigo-600",
+    recommended: true,
+  },
+  {
+    id: "quarterly",
+    name: "Quarterly",
+    price: "$29.95",
+    cycle: "mo",
+    description: "Invoiced each quarter",
+    features: [
+      "All premium features",
+      "Balance of flexibility & savings",
+      "Billed quarterly",
+    ],
+    icon: Clock,
+    color: "from-indigo-500 to-indigo-600",
+  },
+] as const;
 
 const PAYMENT_GATEWAYS = {
-  stripe: { name: "Stripe", logo: "/stripe.png", features: ["Fast processing", "Global coverage", "Strong security"], color: "border-purple-200 hover:border-purple-400", bgColor: "bg-purple-50" },
-  paypal: { name: "PayPal", logo: "/paypal.webp", features: ["Trusted brand", "Buyer protection", "Easy integration"], color: "border-blue-200 hover:border-blue-400", bgColor: "bg-blue-50" },
-  solidgate: { name: "Solidgate", logo: "/solidgate.jpeg", features: ["High approval rates", "Advanced fraud tools", "Multiple currencies"], color: "border-indigo-200 hover:border-indigo-400", bgColor: "bg-indigo-50" },
-} as const
+  stripe: {
+    name: "Stripe",
+    logo: "/stripe.png",
+    features: ["Fast processing", "Global coverage", "Strong security"],
+    color: "border-purple-200 hover:border-purple-400",
+    bgColor: "bg-purple-50",
+  },
+  paypal: {
+    name: "PayPal",
+    logo: "/paypal.webp",
+    features: ["Trusted brand", "Buyer protection", "Easy integration"],
+    color: "border-blue-200 hover:border-blue-400",
+    bgColor: "bg-blue-50",
+  },
+  solidgate: {
+    name: "Solidgate",
+    logo: "/solidgate.jpeg",
+    features: [
+      "High approval rates",
+      "Advanced fraud tools",
+      "Multiple currencies",
+    ],
+    color: "border-indigo-200 hover:border-indigo-400",
+    bgColor: "bg-indigo-50",
+  },
+} as const;
 
-type PlanId = (typeof PLANS)[number]["id"]
-type GatewayId = keyof typeof PAYMENT_GATEWAYS
+type PlanId = (typeof PLANS)[number]["id"];
+type GatewayId = keyof typeof PAYMENT_GATEWAYS;
 
 declare global {
   interface Window {
-    PaymentFormSdk?: any
+    PaymentFormSdk?: any;
   }
 }
 
-function initializePaymentForm(merchant: string, signature: string, paymentIntent: string, planId: string) {
-  if (!window?.PaymentFormSdk) return console.error("Solidgate SDK not loaded")
+function initializePaymentForm(
+  merchant: string,
+  signature: string,
+  paymentIntent: string,
+  planId: string
+) {
+  if (!window?.PaymentFormSdk) return console.error("Solidgate SDK not loaded");
 
   const form = window.PaymentFormSdk.init({
     merchantData: { merchant, signature, paymentIntent },
@@ -58,111 +137,124 @@ function initializePaymentForm(merchant: string, signature: string, paymentInten
         "font-family": "DM Sans",
       },
     },
-  })
+  });
 
   form.on("success", (e: any) => {
-    const order = e.data.order
+    const order = e.data.order;
     const params = new URLSearchParams({
       currency: order.currency,
       payment_id: order.order_id,
       status: "approved",
       subscription_id: order.subscription_id,
       plan_id: planId,
-    })
-    window.location.replace(`/plan?${params.toString()}`)
-  })
+    });
+    window.location.replace(`/dashboard/billing?${params.toString()}`);
+  });
 
   form.on("fail", (e: any) => {
-    alert(e.data.order?.status === "declined" ? "Payment declined" : "Payment failed")
-  })
+    alert(
+      e.data.order?.status === "declined"
+        ? "Payment declined"
+        : "Payment failed"
+    );
+  });
 
-  form.on("error", (e: any) => console.error("Solidgate error:", e.data))
-  form.on("mounted", () => console.log("Solidgate form mounted"))
+  form.on("error", (e: any) => console.error("Solidgate error:", e.data));
+  form.on("mounted", () => console.log("Solidgate form mounted"));
 }
 
 export function SubscriptionForm() {
-  const router = useRouter()
-  const { toast } = useToast()
-  const [isLoading, setIsLoading] = useState(false)
-  const [currentStep, setCurrentStep] = useState<"plan" | "payment">("plan")
-  const [selectedPlan, setSelectedPlan] = useState<PlanId>("annual")
-  const [selectedGateway, setSelectedGateway] = useState<GatewayId>("stripe")
-  const [stripeCustomerId, setStripeCustomerId] = useState<string | null>(null)
-  const [showPromoCode, setShowPromoCode] = useState(false)
-  const [promoCode, setPromoCode] = useState("")
-  const [showPaymentForm, setShowPaymentForm] = useState(false)
-  const [isFormLoading, setIsFormLoading] = useState(false)
+  const router = useRouter();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentStep, setCurrentStep] = useState<"plan" | "payment">("plan");
+  const [selectedPlan, setSelectedPlan] = useState<PlanId>("annual");
+  const [selectedGateway, setSelectedGateway] = useState<GatewayId>("stripe");
+  const [stripeCustomerId, setStripeCustomerId] = useState<string | null>(null);
+  const [showPromoCode, setShowPromoCode] = useState(false);
+  const [promoCode, setPromoCode] = useState("");
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [isFormLoading, setIsFormLoading] = useState(false);
 
   useEffect(() => {
     if (!document.getElementById("solidgate-sdk")) {
-      const script = document.createElement("script")
-      script.src = "https://cdn.solidgate.com/js/solid-form.js"
-      script.async = true
-      script.id = "solidgate-sdk"
-      document.body.appendChild(script)
+      const script = document.createElement("script");
+      script.src = "https://cdn.solidgate.com/js/solid-form.js";
+      script.async = true;
+      script.id = "solidgate-sdk";
+      document.body.appendChild(script);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     const fetchCustomer = async () => {
-      const { customerId, error } = await getOrCreateStripeCustomer()
+      const { customerId, error } = await getOrCreateStripeCustomer();
       if (error) {
-        toast({ title: "Error", description: "Failed to initialize payment processor", variant: "destructive" })
-        return
+        toast({
+          title: "Error",
+          description: "Failed to initialize payment processor",
+          variant: "destructive",
+        });
+        return;
       }
-      setStripeCustomerId(customerId)
-    }
-    fetchCustomer()
-  }, [toast])
+      setStripeCustomerId(customerId);
+    };
+    fetchCustomer();
+  }, [toast]);
 
-  const handlePlanContinue = () => setCurrentStep("payment")
+  const handlePlanContinue = () => setCurrentStep("payment");
 
   const handlePaymentRedirect = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
-      const formData = new FormData()
-      formData.append("plan", selectedPlan)
-      formData.append("billingCycle", selectedPlan)
-      formData.append("gateway", selectedGateway)
-      if (promoCode) formData.append("promoCode", promoCode)
+      const formData = new FormData();
+      formData.append("plan", selectedPlan);
+      formData.append("billingCycle", selectedPlan);
+      formData.append("gateway", selectedGateway);
+      if (promoCode) formData.append("promoCode", promoCode);
 
-      const result = await createCheckoutSession(formData)
+      const result = await createCheckoutSession(formData);
 
-      if (result?.error) throw new Error(result.error)
+      if (result?.error) throw new Error(result.error);
 
       if (result.gateway === "solidgate" && result.merchantData) {
-        const { merchant, signature, paymentIntent } = result.merchantData
-        setShowPaymentForm(true)
-        setIsFormLoading(true)
+        const { merchant, signature, paymentIntent } = result.merchantData;
+        setShowPaymentForm(true);
+        setIsFormLoading(true);
         setTimeout(() => {
-          initializePaymentForm(merchant, signature, paymentIntent, selectedPlan)
-          setIsFormLoading(false)
-        }, 300)
-        return
+          initializePaymentForm(
+            merchant,
+            signature,
+            paymentIntent,
+            selectedPlan
+          );
+          setIsFormLoading(false);
+        }, 300);
+        return;
       }
 
       if (result?.url) {
-        window.location.href = result.url
-        return
+        window.location.href = result.url;
+        return;
       }
 
-      toast({ title: "Redirecting to payment", description: "Please wait..." })
+      toast({ title: "Redirecting to payment", description: "Please wait..." });
     } catch (err) {
-      console.error(err)
-      toast({ 
-        title: "Payment failed", 
-        description: err instanceof Error ? err.message : "Unknown error", 
-        variant: "destructive" 
-      })
+      console.error(err);
+      toast({
+        title: "Payment failed",
+        description: err instanceof Error ? err.message : "Unknown error",
+        variant: "destructive",
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
-  const activePlan = PLANS.find(p => p.id === selectedPlan)
-  const activeGateway = PAYMENT_GATEWAYS[selectedGateway]
-  
+  const activePlan = PLANS.find((p) => p.id === selectedPlan);
+  const activeGateway = PAYMENT_GATEWAYS[selectedGateway];
+
   return (
     <div className="space-y-6 md:space-y-8">
       {/* Progress Steps */}
@@ -185,7 +277,9 @@ export function SubscriptionForm() {
             >
               1
             </div>
-            <span className="mt-2 text-xs md:text-sm font-medium">Choose Plan</span>
+            <span className="mt-2 text-xs md:text-sm font-medium">
+              Choose Plan
+            </span>
           </li>
           <li className="flex flex-col items-center">
             <div
@@ -210,13 +304,14 @@ export function SubscriptionForm() {
               Choose your subscription plan
             </h2>
             <p className="text-sm text-muted-foreground md:text-base mt-1">
-              Select the plan that works best for you. All plans include a 14-day free trial.
+              Select the plan that works best for you. All plans include a
+              14-day free trial.
             </p>
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
             {PLANS.map((plan) => {
-              const PlanIcon = plan.icon
+              const PlanIcon = plan.icon;
               return (
                 <Card
                   key={plan.id}
@@ -235,7 +330,9 @@ export function SubscriptionForm() {
                       </Badge>
                     </div>
                   )}
-                  <CardContent className={`p-6 ${plan.recommended ? "pt-8" : "pt-6"}`}>
+                  <CardContent
+                    className={`p-6 ${plan.recommended ? "pt-8" : "pt-6"}`}
+                  >
                     <div className="flex flex-col space-y-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -247,7 +344,10 @@ export function SubscriptionForm() {
                           <h3 className="text-lg font-semibold">{plan.name}</h3>
                         </div>
                         {plan.savings && (
-                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                          <Badge
+                            variant="outline"
+                            className="bg-green-50 text-green-700 border-green-200"
+                          >
                             Save {plan.savings}
                           </Badge>
                         )}
@@ -255,14 +355,21 @@ export function SubscriptionForm() {
 
                       <div className="flex items-end gap-1">
                         <span className="text-3xl font-bold">{plan.price}</span>
-                        <span className="text-sm text-muted-foreground">/{plan.cycle}</span>
+                        <span className="text-sm text-muted-foreground">
+                          /{plan.cycle}
+                        </span>
                       </div>
 
-                      <p className="text-sm text-muted-foreground">{plan.description}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {plan.description}
+                      </p>
 
                       <ul className="space-y-2 pt-2">
                         {plan.features.map((feature, i) => (
-                          <li key={i} className="flex items-start gap-2 text-sm">
+                          <li
+                            key={i}
+                            className="flex items-start gap-2 text-sm"
+                          >
                             <Check className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
                             <span>{feature}</span>
                           </li>
@@ -273,20 +380,25 @@ export function SubscriptionForm() {
                   <CardFooter className="p-6 pt-0">
                     <Button
                       variant={selectedPlan === plan.id ? "default" : "outline"}
-                      className={`w-full ${selectedPlan === plan.id ? "bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600" : ""}`}
+                      className={`w-full ${
+                        selectedPlan === plan.id
+                          ? "bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600"
+                          : ""
+                      }`}
                       onClick={() => setSelectedPlan(plan.id)}
                     >
                       {selectedPlan === plan.id ? "Selected" : "Select Plan"}
                     </Button>
                   </CardFooter>
                 </Card>
-              )
+              );
             })}
           </div>
 
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-2">
             <div className="text-sm text-muted-foreground">
-              All plans include a 14-day free trial. No credit card required to start.
+              All plans include a 14-day free trial. No credit card required to
+              start.
             </div>
             <Button
               onClick={handlePlanContinue}
@@ -312,56 +424,70 @@ export function SubscriptionForm() {
 
           {!showPaymentForm && (
             <div className="grid gap-6 md:grid-cols-3">
-              {(Object.entries(PAYMENT_GATEWAYS) as [GatewayId, (typeof PAYMENT_GATEWAYS)[GatewayId]][]).map(
-                ([key, gateway]) => (
-                  <Card
-                    key={key}
-                    className={`border-2 cursor-pointer transition-all ${
-                      selectedGateway === key ? "border-primary shadow-md ring-2 ring-primary/20" : gateway.color
-                    }`}
-                    onClick={() => setSelectedGateway(key)}
+              {(
+                Object.entries(PAYMENT_GATEWAYS) as [
+                  GatewayId,
+                  (typeof PAYMENT_GATEWAYS)[GatewayId]
+                ][]
+              ).map(([key, gateway]) => (
+                <Card
+                  key={key}
+                  className={`border-2 cursor-pointer transition-all ${
+                    selectedGateway === key
+                      ? "border-primary shadow-md ring-2 ring-primary/20"
+                      : gateway.color
+                  }`}
+                  onClick={() => setSelectedGateway(key)}
+                >
+                  <CardContent
+                    className={`p-6 ${gateway.bgColor} rounded-t-lg`}
                   >
-                    <CardContent className={`p-6 ${gateway.bgColor} rounded-t-lg`}>
-                      <div className="flex justify-center h-16 items-center">
-                        <Image
-                          src={gateway.logo || "/placeholder.svg"}
-                          alt={gateway.name}
-                          width={120}
-                          height={40}
-                          className="h-10 object-contain"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement
-                            if (target.src.endsWith(".png")) {
-                              target.src = gateway.logo.replace(".png", ".svg")
-                            }
-                          }}
+                    <div className="flex justify-center h-16 items-center">
+                      <Image
+                        src={gateway.logo || "/placeholder.svg"}
+                        alt={gateway.name}
+                        width={120}
+                        height={40}
+                        className="h-10 object-contain"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          if (target.src.endsWith(".png")) {
+                            target.src = gateway.logo.replace(".png", ".svg");
+                          }
+                        }}
+                      />
+                    </div>
+                  </CardContent>
+                  <CardContent className="p-6 pt-4">
+                    <div className="flex flex-col space-y-4">
+                      <RadioGroup
+                        value={selectedGateway}
+                        className="flex items-center justify-between"
+                      >
+                        <h3 className="font-medium">{gateway.name}</h3>
+                        <RadioGroupItem
+                          value={key}
+                          id={key}
+                          checked={selectedGateway === key}
+                          className={
+                            selectedGateway === key
+                              ? "text-primary border-primary"
+                              : ""
+                          }
                         />
-                      </div>
-                    </CardContent>
-                    <CardContent className="p-6 pt-4">
-                      <div className="flex flex-col space-y-4">
-                        <RadioGroup value={selectedGateway} className="flex items-center justify-between">
-                          <h3 className="font-medium">{gateway.name}</h3>
-                          <RadioGroupItem
-                            value={key}
-                            id={key}
-                            checked={selectedGateway === key}
-                            className={selectedGateway === key ? "text-primary border-primary" : ""}
-                          />
-                        </RadioGroup>
-                        <ul className="space-y-2 text-sm text-muted-foreground">
-                          {gateway.features.map((feature, i) => (
-                            <li key={i} className="flex items-center gap-2">
-                              <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
-                              <span>{feature}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ),
-              )}
+                      </RadioGroup>
+                      <ul className="space-y-2 text-sm text-muted-foreground">
+                        {gateway.features.map((feature, i) => (
+                          <li key={i} className="flex items-center gap-2">
+                            <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           )}
 
@@ -375,7 +501,8 @@ export function SubscriptionForm() {
                   <div>
                     <h3 className="font-medium text-lg">Secure Checkout</h3>
                     <p className="text-sm text-muted-foreground">
-                      All payments are protected by our advanced fraud detection system
+                      All payments are protected by our advanced fraud detection
+                      system
                     </p>
                   </div>
                 </div>
@@ -385,15 +512,21 @@ export function SubscriptionForm() {
                   <div className="space-y-2 mb-4">
                     <div className="flex justify-between">
                       <span className="text-sm">Plan</span>
-                      <span className="text-sm font-medium">{activePlan?.name}</span>
+                      <span className="text-sm font-medium">
+                        {activePlan?.name}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Billing</span>
-                      <span className="text-sm font-medium">{activePlan?.description}</span>
+                      <span className="text-sm font-medium">
+                        {activePlan?.description}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Payment method</span>
-                      <span className="text-sm font-medium">{activeGateway.name}</span>
+                      <span className="text-sm font-medium">
+                        {activeGateway.name}
+                      </span>
                     </div>
                   </div>
 
@@ -437,7 +570,9 @@ export function SubscriptionForm() {
                         <div className="text-lg font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
                           {activePlan?.price}/{activePlan?.cycle}
                         </div>
-                        <div className="text-xs text-muted-foreground">First 14 days free</div>
+                        <div className="text-xs text-muted-foreground">
+                          First 14 days free
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -445,7 +580,10 @@ export function SubscriptionForm() {
 
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <CreditCard className="h-4 w-4" />
-                  <span>Your payment information is securely processed by {activeGateway.name}</span>
+                  <span>
+                    Your payment information is securely processed by{" "}
+                    {activeGateway.name}
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -454,53 +592,74 @@ export function SubscriptionForm() {
           {selectedGateway === "solidgate" && isFormLoading && (
             <div className="mt-6 border rounded-lg p-6 bg-white shadow-sm flex items-center justify-center h-[300px]">
               <div className="flex flex-col items-center gap-2">
-                <svg 
-                  className="animate-spin h-8 w-8 text-blue-500" 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  fill="none" 
+                <svg
+                  className="animate-spin h-8 w-8 text-blue-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
                   viewBox="0 0 24 24"
                 >
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 <span>Loading payment form...</span>
               </div>
             </div>
           )}
 
-          {selectedGateway === "solidgate" && showPaymentForm && !isFormLoading && (
-            <div className="mt-6 border rounded-lg p-6 bg-white shadow-sm">
-              <div className="flex items-center gap-3 mb-4">
-                <Image
-                  src="/solidgate.jpeg"
-                  alt="Solidgate"
-                  width={120}
-                  height={40}
-                  className="h-8 object-contain"
+          {selectedGateway === "solidgate" &&
+            showPaymentForm &&
+            !isFormLoading && (
+              <div className="mt-6 border rounded-lg p-6 bg-white shadow-sm">
+                {/* Header: Solidgate logo and caption */}
+                <div className="flex items-center gap-3 mb-4">
+                  <Image
+                    src="/solidgate.jpeg"
+                    alt="Solidgate"
+                    width={120}
+                    height={40}
+                    className="h-8 object-contain"
+                  />
+                  <span className="text-sm text-muted-foreground">
+                    Secure payment processing
+                  </span>
+                </div>
+
+                {/* Solidgate Payment Form Mount Point */}
+                <div
+                  id="solid-payment-form-container"
+                  className="min-h-[300px] w-full bg-gray-50 border border-dashed border-gray-300 rounded-md p-4  flex items-center justify-center"
+                  aria-label="Secure payment form"
                 />
-                <span className="text-sm text-muted-foreground">
-                  Secure payment processing
-                </span>
+
+                {/* Security info */}
+                <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
+                  <Shield className="h-4 w-4 text-green-500" />
+                  <span>
+                    Your payment details are encrypted and processed securely.
+                  </span>
+                </div>
               </div>
-              <div 
-                id="solid-payment-form-container" 
-                className="min-h-[300px] w-full bg-gray-50 rounded-md p-4"
-              />
-              <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
-                <Shield className="h-4 w-4 text-green-500" />
-                <span>Your payment details are encrypted and processed securely</span>
-              </div>
-            </div>
-          )}
+            )}
 
           <div className="flex flex-col-reverse gap-3 md:flex-row md:justify-between md:gap-4 pt-2">
-            <Button 
-              type="button" 
-              variant="outline" 
+            <Button
+              type="button"
+              variant="outline"
               onClick={() => {
-                setCurrentStep("plan")
-                setShowPaymentForm(false)
-              }} 
+                setCurrentStep("plan");
+                setShowPaymentForm(false);
+              }}
               className="w-full md:w-auto"
             >
               Back to Plans
@@ -511,7 +670,11 @@ export function SubscriptionForm() {
                   <div className="w-full md:w-auto">
                     <Button
                       onClick={handlePaymentRedirect}
-                      disabled={isLoading || !stripeCustomerId || (selectedGateway === "solidgate" && showPaymentForm)}
+                      disabled={
+                        isLoading ||
+                        !stripeCustomerId ||
+                        (selectedGateway === "solidgate" && showPaymentForm)
+                      }
                       className="w-full md:w-auto bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-700 hover:to-indigo-600"
                     >
                       {isLoading ? (
@@ -540,7 +703,10 @@ export function SubscriptionForm() {
                         </>
                       ) : (
                         <>
-                          {selectedGateway === "solidgate" && showPaymentForm ? "Processing..." : "Complete Purchase"} <ArrowRight className="ml-2 h-4 w-4" />
+                          {selectedGateway === "solidgate" && showPaymentForm
+                            ? "Processing..."
+                            : "Complete Purchase"}{" "}
+                          <ArrowRight className="ml-2 h-4 w-4" />
                         </>
                       )}
                     </Button>
@@ -557,5 +723,5 @@ export function SubscriptionForm() {
         </div>
       )}
     </div>
-  )
+  );
 }
