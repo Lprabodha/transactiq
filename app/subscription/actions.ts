@@ -5,10 +5,17 @@ import { ObjectId } from "mongodb"
 import { getCurrentUser } from "@/app/actions/auth"
 import clientPromise from "@/lib/mongodb"
 import Stripe from "stripe"
+import { Api as SolidgateApi } from '@solidgate/node-sdk'
+
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
   apiVersion: "2023-10-16",
 })
+
+const solidgateApi = new SolidgateApi(
+  process.env.SOLIDGATE_PUBLIC_KEY!,
+  process.env.SOLIDGATE_SECRET_KEY!
+)
 
 function getDatabaseName(uri: string): string {
   const parts = uri.split('/')
@@ -91,16 +98,24 @@ export async function createCheckoutSession(formData: FormData) {
     }
 
     let priceId = process.env.STRIPE_PRICE_1_ID
+    let solidgatePriceId = process.env.SOLIDGATE_PRICE_1_ID
+    let amount = 1000
 
     switch (plan) {
       case "monthly":
         priceId = process.env.STRIPE_PRICE_1_ID
+        solidgatePriceId = process.env.SOLIDGATE_PRICE_1_ID!
+        amount = 1000
         break
       case "quarterly":
         priceId = process.env.STRIPE_PRICE_3_ID
+        solidgatePriceId = process.env.SOLIDGATE_PRICE_3_ID!
+        amount = 2500
         break
       case "annual":
         priceId = process.env.STRIPE_PRICE_12_ID
+        solidgatePriceId = process.env.SOLIDGATE_PRICE_12_ID!
+        amount = 2500
         break
       default:
         priceId = process.env.STRIPE_PRICE_1_ID
@@ -124,7 +139,22 @@ export async function createCheckoutSession(formData: FormData) {
         return { url: session.url };
       }
     } else if (gateway == 'solidgate') {
-      return { url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true` };
+      const merchantData = solidgateApi.formMerchantData({
+        amount: amount * 100, 
+        currency: 'USD',
+        customer_email: currentUser.email,
+        order_description: `${plan} subscription`,
+        order_id: `${Date.now()}`,
+        platform: 'WEB',
+        geo_country: 'ESP',
+        form_design_name: 'form-design',
+        subscription_plan_id: solidgatePriceId,
+      })
+
+      return {
+        gateway: 'solidgate',
+        merchantData: merchantData.toObject(),
+      }
     }
 
     return { url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard` };
