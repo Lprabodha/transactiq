@@ -65,6 +65,7 @@ export async function POST(req: Request) {
                     $set: {
                         plan_id: planId,
                         plan_expire_date: expirationDate,
+                        payment_processor: 'stripe',
                         updatedAt: new Date(),
                     },
                 }

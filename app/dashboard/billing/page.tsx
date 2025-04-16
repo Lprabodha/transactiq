@@ -22,6 +22,7 @@ import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { createStripePortal } from "@/app/actions/stripe"
 
 // Helper function to get plan name by ID
 function getPlanName(planId: number): string {
@@ -37,7 +38,6 @@ function getPlanName(planId: number): string {
   }
 }
 
-// Helper function to get plan price by ID
 function getPlanPrice(planId: number): string {
   switch (planId) {
     case 1:
@@ -51,7 +51,6 @@ function getPlanPrice(planId: number): string {
   }
 }
 
-// Helper function to get plan features
 function getPlanFeatures(planId: number): string[] {
   const baseFeatures = ["Core platform access", "Customer support"]
 
@@ -81,7 +80,6 @@ function getPlanFeatures(planId: number): string[] {
   }
 }
 
-// Helper function to get card icon based on first digit
 function getCardIcon(cardNumber: string): string {
   const firstDigit = cardNumber.charAt(0)
   switch (firstDigit) {
@@ -112,11 +110,10 @@ export default async function BillingPage() {
     ? format(new Date(userData.plan_expire_date), "MMMM d, yyyy")
     : "Not available"
 
-  // Calculate days remaining until expiration
   const today = new Date()
   const expDate = userData.plan_expire_date ? new Date(userData.plan_expire_date) : null
   const daysRemaining = expDate ? Math.ceil((expDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)) : 0
-  const totalDays = 30 // Assuming a 30-day billing cycle
+  const totalDays = 30 
   const progressPercentage = expDate ? Math.max(0, Math.min(100, (daysRemaining / totalDays) * 100)) : 0
 
   return (
@@ -139,9 +136,20 @@ export default async function BillingPage() {
                 <RefreshCw className="h-4 w-4" />
                 Change Plan
               </Button>
-              <Button className="bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600">
-                Manage Billing
-              </Button>
+              <form action={async () => {
+                "use server"
+                const portalUrl = await createStripePortal()
+                if (portalUrl) {
+                  redirect(portalUrl)
+                }
+              }}>
+                <Button 
+                  type="submit"
+                  className="bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600"
+                >
+                  Manage Billing
+                </Button>
+              </form>
             </div>
           </div>
         </CardContent>
@@ -399,4 +407,3 @@ export default async function BillingPage() {
     </DashboardShell>
   )
 }
-
