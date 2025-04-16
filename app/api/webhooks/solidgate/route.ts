@@ -54,7 +54,8 @@ async function createOneTimePayment(data: any) {
 }
 
 async function subscriptionActive(data: any) {
-    const email = data?.order?.customer_email;
+
+    const email = data?.customer?.customer_email;
     const productId = data?.product?.product_id;
 
     if (!email || !productId) {
@@ -110,7 +111,7 @@ async function subscriptionActive(data: any) {
 }
 
 async function subscriptionRenew(data: any) {
-    const email = data?.order?.customer_email;
+    const email = data?.customer?.customer_email;
     const productId = data?.product?.product_id;
 
     if (!email || !productId) {

@@ -151,9 +151,6 @@ export async function createCheckoutSession(formData: FormData) {
         amount: amount,
         form_design_name: 'form-design',
         product_price_id: solidgatePriceId,
-        order_metadata: {
-
-        },
         success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true`,
         fail_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription?canceled=true`,
       })
