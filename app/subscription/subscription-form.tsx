@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import {
   Check,
   ArrowRight,
@@ -41,6 +40,8 @@ const PLANS = [
     ],
     icon: Calendar,
     color: "from-blue-500 to-blue-600",
+    recommended: false,
+    savings: undefined,
   },
   {
     id: "annual",
@@ -67,6 +68,8 @@ const PLANS = [
     ],
     icon: Clock,
     color: "from-indigo-500 to-indigo-600",
+    recommended: false,
+    savings: undefined,
   },
 ] as const;
 
@@ -100,10 +103,52 @@ const PAYMENT_GATEWAYS = {
 
 type PlanId = (typeof PLANS)[number]["id"];
 type GatewayId = keyof typeof PAYMENT_GATEWAYS;
+type Order = {
+  currency: string;
+  order_id: string;
+  subscription_id: string;
+  status: string;
+};
+type PaymentFormEventCallback = {
+  data: {
+    order: Order;
+  };
+};
 
 declare global {
   interface Window {
-    PaymentFormSdk?: any;
+    PaymentFormSdk?: {
+      init: (config: {
+        merchantData: {
+          merchant: string;
+          signature: string;
+          paymentIntent: string;
+        };
+        iframeParams: { containerId: string };
+        formParams: {
+          buttonType: string;
+          submitButtonText: string;
+          isCardHolderVisible: boolean;
+          hideCvvNumbers: boolean;
+          headerText: string;
+          titleText: string;
+          formTypeClass: string;
+        };
+        styles: {
+          submit_button: {
+            "background-color": string;
+            color: string;
+            ":hover": { "background-color": string };
+          };
+          form_body: { "font-family": string };
+        };
+      }) => {
+        on: (
+          event: string,
+          callback: (data: PaymentFormEventCallback) => void
+        ) => void;
+      };
+    };
   }
 }
 
@@ -139,32 +184,30 @@ function initializePaymentForm(
     },
   });
 
-  form.on("success", (e: any) => {
-    const order = e.data.order;
+  form.on("success", ({ data: { order } }: PaymentFormEventCallback) => {
+    const { currency, order_id, subscription_id } = order;
     const params = new URLSearchParams({
-      currency: order.currency,
-      payment_id: order.order_id,
+      currency,
+      payment_id: order_id,
       status: "approved",
-      subscription_id: order.subscription_id,
+      subscription_id,
       plan_id: planId,
     });
     window.location.replace(`/dashboard/billing?${params.toString()}`);
   });
 
-  form.on("fail", (e: any) => {
-    alert(
-      e.data.order?.status === "declined"
-        ? "Payment declined"
-        : "Payment failed"
-    );
+  form.on("fail", ({ data: { order } }: PaymentFormEventCallback) => {
+    alert(order.status === "declined" ? "Payment declined" : "Payment failed");
   });
 
-  form.on("error", (e: any) => console.error("Solidgate error:", e.data));
+  form.on("error", ({ data }: PaymentFormEventCallback) =>
+    console.error("Solidgate error:", data)
+  );
+
   form.on("mounted", () => console.log("Solidgate form mounted"));
 }
 
 export function SubscriptionForm() {
-  const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState<"plan" | "payment">("plan");
@@ -216,10 +259,15 @@ export function SubscriptionForm() {
 
       const result = await createCheckoutSession(formData);
 
-      if (result?.error) throw new Error(result.error);
+      if ("error" in result && result.error)
+        throw new Error(String(result.error));
 
       if (result.gateway === "solidgate" && result.merchantData) {
-        const { merchant, signature, paymentIntent } = result.merchantData;
+        const { merchant, signature, paymentIntent } = result.merchantData as {
+          merchant: string;
+          signature: string;
+          paymentIntent: string;
+        };
         setShowPaymentForm(true);
         setIsFormLoading(true);
         setTimeout(() => {
