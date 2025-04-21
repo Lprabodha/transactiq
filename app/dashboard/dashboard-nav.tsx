@@ -1,18 +1,27 @@
+"use client";
 
-"use client"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  CreditCard,
+  Home,
+  LifeBuoy,
+  LogOut,
+  Settings,
+  User,
+  BarChart2,
+  ChevronRight,
+  HelpCircle,
+} from "lucide-react";
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { CreditCard, Home, LifeBuoy, LogOut, Settings, User, BarChart2, ChevronRight, HelpCircle } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
-import { logoutUser } from "@/app/actions/auth"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useAuth } from "@/app/context/auth-context"
+import { Button } from "@/components/ui/button";
+import { logoutUser } from "@/app/actions/auth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/app/context/auth-context";
 
 export function DashboardNav() {
-  const pathname = usePathname()
-  const { user } = useAuth()
+  const pathname = usePathname();
+  const { user } = useAuth();
 
   const navItems = [
     {
@@ -40,7 +49,7 @@ export function DashboardNav() {
       href: "/dashboard/settings",
       icon: Settings,
     },
-  ]
+  ];
 
   // Get user initials for avatar
   const initials = user?.name
@@ -49,7 +58,7 @@ export function DashboardNav() {
         .map((n) => n[0])
         .join("")
         .toUpperCase()
-    : "U"
+    : "U";
 
   return (
     <div className="flex h-full flex-col border-r bg-background/95 backdrop-blur-sm">
@@ -82,10 +91,12 @@ export function DashboardNav() {
       )}
 
       <div className="flex-1 overflow-auto py-6 px-3">
-        <div className="mb-2 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Main</div>
+        <div className="mb-2 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+          Main
+        </div>
         <nav className="grid items-start gap-1 text-sm font-medium">
           {navItems.map((item, index) => {
-            const isActive = pathname === item.href
+            const isActive = pathname === item.href;
 
             return (
               <Link
@@ -99,13 +110,19 @@ export function DashboardNav() {
               >
                 <div className="flex items-center gap-3">
                   <item.icon
-                    className={`h-4 w-4 ${isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"}`}
+                    className={`h-4 w-4 ${
+                      isActive
+                        ? "text-primary"
+                        : "text-muted-foreground group-hover:text-foreground"
+                    }`}
                   />
                   <span>{item.title}</span>
                 </div>
-                {isActive && <div className="h-1.5 w-1.5 rounded-full bg-primary"></div>}
+                {isActive && (
+                  <div className="h-1.5 w-1.5 rounded-full bg-primary"></div>
+                )}
               </Link>
-            )
+            );
           })}
         </nav>
 
@@ -138,7 +155,9 @@ export function DashboardNav() {
             </div>
             <div>
               <div className="text-sm font-medium">Pro Plan</div>
-              <div className="text-xs text-muted-foreground">Renews on May 15, 2023</div>
+              <div className="text-xs text-muted-foreground">
+                Renews on May 15, 2023
+              </div>
             </div>
           </div>
           <Button variant="outline" size="sm" className="w-full gap-1 text-xs">
@@ -147,18 +166,16 @@ export function DashboardNav() {
           </Button>
         </div>
 
-        <form action={logoutUser}>
-          <Button
-            variant="outline"
-            className="flex items-center gap-3 justify-center w-full border-dashed"
-            type="submit"
-          >
-            <LogOut className="h-4 w-4" />
-            <span>Log out</span>
-          </Button>
-        </form>
+        <Button
+          variant="outline"
+          className="flex items-center gap-3 justify-center w-full border-dashed"
+          type="submit"
+          onClick={() => logoutUser()}
+        >
+          <LogOut className="h-4 w-4" />
+          <span>Log out</span>
+        </Button>
       </div>
     </div>
-  )
+  );
 }
-

@@ -13,6 +13,11 @@ export const metadata: Metadata = {
 
 export default async function SubscriptionPage() {
   const currentUser = await getCurrentUser();
+
+  if (!currentUser) {
+    redirect("/login");
+  }
+
   const userData = await getUserById(currentUser.id);
 
   if (userData?.plan_id !== 0) {
