@@ -8,7 +8,7 @@ import Stripe from "stripe";
 import { Api as SolidgateApi } from "@solidgate/node-sdk";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2023-10-16",
+  apiVersion: "2025-02-24.acacia",
 });
 
 const solidgateApi = new SolidgateApi(
