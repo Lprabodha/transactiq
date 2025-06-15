@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import { SubscriptionForm } from "@/app/subscription/subscription-form";
+import { SubscriptionForm } from "@/app/dashboard/subscription/subscription-form";
 import { getCurrentUser } from "@/app/actions/auth";
 import { getUserById } from "@/lib/models/user";
+import { DashboardHeader } from "@/app/dashboard/dashboard-header"
+import { DashboardShell } from "@/app/dashboard/dashboard-shell"
 
 export const metadata: Metadata = {
   title: "Choose Your Subscription | TransactIQ",
@@ -25,19 +27,16 @@ export default async function SubscriptionPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <div className="container px-4 py-6 md:max-w-4xl md:py-10">
-        <header className="mb-6 md:mb-8">
-          <h1 className="text-2xl font-bold md:text-3xl">
-            Choose your subscription plan
-          </h1>
-          <p className="text-sm text-muted-foreground md:text-base">
-            Select the plan that works best for you and your team.
-          </p>
-        </header>
-
-        <SubscriptionForm />
+    <DashboardShell>
+      <DashboardHeader
+        heading="Subscription"
+        text="Choose Your Subscription"
+      />
+      <div className="flex min-h-screen flex-col">
+        <div className="container px-4 py-6 md:max-w-4xl md:py-10">
+          <SubscriptionForm />
+        </div>
       </div>
-    </div>
+    </DashboardShell>
   );
 }

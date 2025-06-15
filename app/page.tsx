@@ -1,10 +1,25 @@
-import Link from "next/link"
-import Image from "next/image"
-import { ArrowRight, Check, Shield, CreditCard, BarChart4, Webhook, AreaChart } from "lucide-react"
+import Link from "next/link";
+import Image from "next/image";
+import {
+  ArrowRight,
+  Check,
+  Shield,
+  CreditCard,
+  BarChart4,
+  Webhook,
+  AreaChart,
+} from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function LandingPage() {
   return (
@@ -69,7 +84,8 @@ export default function LandingPage() {
                     Secure Payments with Advanced AI
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    Reduce fraud by up to 97% and increase approval rates by 15% with our AI-powered payment platform.
+                    Reduce fraud by up to 97% and increase approval rates by 15%
+                    with our AI-powered payment platform.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -82,7 +98,12 @@ export default function LandingPage() {
                       Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
-                  <Button size="lg" variant="outline" className="text-base" asChild>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="text-base"
+                    asChild
+                  >
                     <Link href="#features">See How It Works</Link>
                   </Button>
                 </div>
@@ -91,8 +112,24 @@ export default function LandingPage() {
                 <div className="mt-6 flex flex-col space-y-3 text-sm text-muted-foreground">
                   <div className="flex items-center">
                     <div className="flex -space-x-2">
-                      {[1, 2, 3, 4, 5].map((i) => (
-                        <div key={i} className="h-8 w-8 rounded-full bg-gray-200 border-2 border-white" />
+                      {[
+                        "stripe.com",
+                        "paypal.com",
+                        "solidgate.com",
+                        "squareup.com",
+                        "adyen.com",
+                      ].map((domain, i) => (
+                        <div
+                          key={i}
+                          className="h-8 w-8 rounded-full border-2 border-white overflow-hidden relative"
+                        >
+                          <Image
+                            src={`https://logo.clearbit.com/${domain}`}
+                            alt={`Logo of ${domain}`}
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
                       ))}
                     </div>
                     <div className="ml-3">Trusted by 10,000+ businesses</div>
@@ -100,21 +137,23 @@ export default function LandingPage() {
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center">
                       <div className="flex text-yellow-400">
-                        {[1, 2, 3, 4, 5].map((i) => (
-                          <svg
-                            key={i}
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="currentColor"
-                            className="w-4 h-4"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        ))}
+                        <div className="flex -space-x-2">
+                          {[1, 2, 3, 4, 5].map((i) => (
+                            <div
+                              key={i}
+                              className="h-8 w-8 rounded-full overflow-hidden border-2 border-white relative"
+                            >
+                              <Image
+                                src={`https://randomuser.me/api/portraits/men/${
+                                  i + 10
+                                }.jpg`}
+                                alt={`User ${i}`}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                          ))}
+                        </div>
                       </div>
                       <span className="ml-2">4.9/5 from 2,000+ reviews</span>
                     </div>
@@ -124,7 +163,7 @@ export default function LandingPage() {
               <div className="relative lg:order-last">
                 <div className="absolute -top-4 -right-4 h-72 w-72 rounded-full bg-purple-100 blur-3xl"></div>
                 <Image
-                  src="/placeholder.svg?height=550&width=550"
+                  src="images/placeholder.jpg?height=550&width=550"
                   width={550}
                   height={550}
                   alt="Secure payment platform dashboard"
@@ -139,10 +178,45 @@ export default function LandingPage() {
         <section className="w-full py-8 md:py-12 border-y bg-gray-50">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <p className="text-sm font-medium text-muted-foreground">TRUSTED BY INDUSTRY LEADERS</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                TRUSTED BY INDUSTRY LEADERS
+              </p>
               <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 lg:gap-16">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="h-8 w-24 bg-gray-200 rounded"></div>
+                {[
+                  {
+                    name: "Stripe",
+                    src: "/images/logo-stripe.png",
+                    alt: "Stripe Logo",
+                  },
+                  {
+                    name: "PayPal",
+                    src: "/images/logo-paypal.png",
+                    alt: "PayPal Logo",
+                  },
+                  {
+                    name: "Adyen",
+                    src: "/images/logo-adyen.png",
+                    alt: "Adyen Logo",
+                  },
+                  {
+                    name: "Solidgate",
+                    src: "/images/logo-solidgate.jpg",
+                    alt: "Solidgate Logo",
+                  },
+                  {
+                    name: "Square",
+                    src: "/images/logo-square.png",
+                    alt: "Square Logo",
+                  },
+                ].map((logo, i) => (
+                  <div key={i} className="h-10 w-24 relative">
+                    <Image
+                      src={logo.src}
+                      alt={logo.alt}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
                 ))}
               </div>
             </div>
@@ -150,7 +224,10 @@ export default function LandingPage() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-white to-purple-50">
+        <section
+          id="features"
+          className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-white to-purple-50"
+        >
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-8 md:mb-12">
               <div className="inline-block rounded-lg bg-gradient-to-r from-purple-600 to-blue-500 px-3 py-1 text-sm text-white">
@@ -160,8 +237,8 @@ export default function LandingPage() {
                 Advanced AI-powered payment solutions
               </h2>
               <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed">
-                Our platform provides cutting-edge tools to secure your payments, optimize routing, and forecast
-                revenue.
+                Our platform provides cutting-edge tools to secure your
+                payments, optimize routing, and forecast revenue.
               </p>
             </div>
 
@@ -172,10 +249,13 @@ export default function LandingPage() {
                   <div className="inline-block rounded-lg bg-purple-100 px-3 py-1 text-sm text-purple-800 mb-4">
                     FEATURED
                   </div>
-                  <h3 className="text-2xl font-bold mb-4">Real-time Fraud Detection</h3>
+                  <h3 className="text-2xl font-bold mb-4">
+                    Real-time Fraud Detection
+                  </h3>
                   <p className="text-muted-foreground mb-6">
-                    Our AI-powered fraud detection system analyzes transactions in real-time, identifying suspicious
-                    patterns and preventing fraud before it happens.
+                    Our AI-powered fraud detection system analyzes transactions
+                    in real-time, identifying suspicious patterns and preventing
+                    fraud before it happens.
                   </p>
                   <ul className="space-y-2 mb-6">
                     <li className="flex items-center gap-2">
@@ -197,7 +277,7 @@ export default function LandingPage() {
                 </div>
                 <div className="order-1 md:order-2">
                   <Image
-                    src="/placeholder.svg?height=400&width=400"
+                    src="/images/fraud.png?height=400&width=400"
                     width={400}
                     height={400}
                     alt="Fraud Detection Dashboard"
@@ -218,8 +298,9 @@ export default function LandingPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    Real-time fraud prediction using trained ML models. Flags issues like country mismatch, public email
-                    domains, and unusual amounts.
+                    Real-time fraud prediction using trained ML models. Flags
+                    issues like country mismatch, public email domains, and
+                    unusual amounts.
                   </p>
                   <ul className="mt-4 space-y-2">
                     <li className="flex items-center gap-2">
@@ -242,13 +323,15 @@ export default function LandingPage() {
                 <CardHeader className="flex flex-row items-center gap-4 pb-2">
                   <CreditCard className="h-8 w-8 text-blue-600" />
                   <div>
-                    <CardTitle className="text-xl">Chargeback Prediction</CardTitle>
+                    <CardTitle className="text-xl">
+                      Chargeback Prediction
+                    </CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    Predicts likelihood of a chargeback using customer transaction features, helping you reduce
-                    financial losses.
+                    Predicts likelihood of a chargeback using customer
+                    transaction features, helping you reduce financial losses.
                   </p>
                   <ul className="mt-4 space-y-2">
                     <li className="flex items-center gap-2">
@@ -271,13 +354,15 @@ export default function LandingPage() {
                 <CardHeader className="flex flex-row items-center gap-4 pb-2">
                   <BarChart4 className="h-8 w-8 text-indigo-600" />
                   <div>
-                    <CardTitle className="text-xl">Smart Payment Routing</CardTitle>
+                    <CardTitle className="text-xl">
+                      Smart Payment Routing
+                    </CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    Recommends optimal gateway (Stripe, PayPal, Adyen) using deep learning to maximize approval rates
-                    and minimize costs.
+                    Recommends optimal gateway (Stripe, PayPal, Adyen) using
+                    deep learning to maximize approval rates and minimize costs.
                   </p>
                   <ul className="mt-4 space-y-2">
                     <li className="flex items-center gap-2">
@@ -300,18 +385,22 @@ export default function LandingPage() {
                 <CardHeader className="flex flex-row items-center gap-4 pb-2">
                   <AreaChart className="h-8 w-8 text-pink-600" />
                   <div>
-                    <CardTitle className="text-xl">Revenue Forecasting</CardTitle>
+                    <CardTitle className="text-xl">
+                      Revenue Forecasting
+                    </CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    Predicts next month&apos;s revenue per customer using regression models, helping you plan and grow
-                    your business.
+                    Predicts next month&apos;s revenue per customer using
+                    regression models, helping you plan and grow your business.
                   </p>
                   <ul className="mt-4 space-y-2">
                     <li className="flex items-center gap-2">
                       <Check className="h-4 w-4 text-green-500" />
-                      <span className="text-sm">Customer-level predictions</span>
+                      <span className="text-sm">
+                        Customer-level predictions
+                      </span>
                     </li>
                     <li className="flex items-center gap-2">
                       <Check className="h-4 w-4 text-green-500" />
@@ -329,18 +418,23 @@ export default function LandingPage() {
                 <CardHeader className="flex flex-row items-center gap-4 pb-2">
                   <Webhook className="h-8 w-8 text-green-600" />
                   <div>
-                    <CardTitle className="text-xl">Webhook Integration</CardTitle>
+                    <CardTitle className="text-xl">
+                      Webhook Integration
+                    </CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    Seamlessly integrate with your existing systems through our robust webhook system. Receive real-time
-                    notifications for all payment events.
+                    Seamlessly integrate with your existing systems through our
+                    robust webhook system. Receive real-time notifications for
+                    all payment events.
                   </p>
                   <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
                     <div className="rounded-lg border bg-card p-3">
                       <h3 className="font-medium">Payment Events</h3>
-                      <p className="text-sm text-muted-foreground">Get notified about successful and failed payments</p>
+                      <p className="text-sm text-muted-foreground">
+                        Get notified about successful and failed payments
+                      </p>
                     </div>
                     <div className="rounded-lg border bg-card p-3">
                       <h3 className="font-medium">Fraud Alerts</h3>
@@ -373,8 +467,8 @@ export default function LandingPage() {
                   Secure your payments in minutes
                 </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Our platform is designed to be easy to integrate and use, with powerful features that work right out
-                  of the box.
+                  Our platform is designed to be easy to integrate and use, with
+                  powerful features that work right out of the box.
                 </p>
               </div>
             </div>
@@ -385,7 +479,8 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-xl font-bold">Connect Your Account</h3>
                 <p className="text-sm text-muted-foreground">
-                  Sign up and connect your payment gateways to start processing transactions securely.
+                  Sign up and connect your payment gateways to start processing
+                  transactions securely.
                 </p>
               </div>
               <div className="flex flex-col items-center space-y-2 rounded-lg border-2 border-blue-100 bg-white p-6 text-center shadow-sm">
@@ -394,7 +489,8 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-xl font-bold">Configure AI Settings</h3>
                 <p className="text-sm text-muted-foreground">
-                  Set up your fraud detection thresholds and payment routing preferences to match your business needs.
+                  Set up your fraud detection thresholds and payment routing
+                  preferences to match your business needs.
                 </p>
               </div>
               <div className="flex flex-col items-center space-y-2 rounded-lg border-2 border-indigo-100 bg-white p-6 text-center shadow-sm">
@@ -403,7 +499,8 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-xl font-bold">Process Payments</h3>
                 <p className="text-sm text-muted-foreground">
-                  Start processing payments with real-time fraud detection and optimal gateway routing.
+                  Start processing payments with real-time fraud detection and
+                  optimal gateway routing.
                 </p>
               </div>
             </div>
@@ -416,35 +513,49 @@ export default function LandingPage() {
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
               <div className="flex flex-col items-center text-center">
                 <div className="text-4xl font-bold mb-2">97%</div>
-                <div className="text-sm text-white/80">Fraud Detection Accuracy</div>
+                <div className="text-sm text-white/80">
+                  Fraud Detection Accuracy
+                </div>
               </div>
               <div className="flex flex-col items-center text-center">
                 <div className="text-4xl font-bold mb-2">15%</div>
-                <div className="text-sm text-white/80">Increase in Approval Rates</div>
+                <div className="text-sm text-white/80">
+                  Increase in Approval Rates
+                </div>
               </div>
               <div className="flex flex-col items-center text-center">
                 <div className="text-4xl font-bold mb-2">85%</div>
-                <div className="text-sm text-white/80">Reduction in Chargebacks</div>
+                <div className="text-sm text-white/80">
+                  Reduction in Chargebacks
+                </div>
               </div>
               <div className="flex flex-col items-center text-center">
                 <div className="text-4xl font-bold mb-2">10K+</div>
-                <div className="text-sm text-white/80">Businesses Protected</div>
+                <div className="text-sm text-white/80">
+                  Businesses Protected
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         {/* Pricing Section */}
-        <section id="pricing" className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-white to-purple-50">
+        <section
+          id="pricing"
+          className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-white to-purple-50"
+        >
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-gradient-to-r from-purple-600 to-blue-500 px-3 py-1 text-sm text-white">
                   Pricing
                 </div>
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">Simple, transparent pricing</h2>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+                  Simple, transparent pricing
+                </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Choose the plan that works best for you and your team. All plans include a 14-day free trial.
+                  Choose the plan that works best for you and your team. All
+                  plans include a 14-day free trial.
                 </p>
               </div>
             </div>
@@ -478,15 +589,22 @@ export default function LandingPage() {
                       {
                         title: "Starter",
                         price: "$29",
-                        description: "Perfect for individuals and small teams just getting started.",
-                        features: ["Up to 5 team members", "5GB storage", "Basic fraud detection", "24/7 support"],
+                        description:
+                          "Perfect for individuals and small teams just getting started.",
+                        features: [
+                          "Up to 5 team members",
+                          "5GB storage",
+                          "Basic fraud detection",
+                          "24/7 support",
+                        ],
                         popular: false,
                         color: "from-purple-600 to-blue-500",
                       },
                       {
                         title: "Professional",
                         price: "$79",
-                        description: "Ideal for growing teams that need more features and flexibility.",
+                        description:
+                          "Ideal for growing teams that need more features and flexibility.",
                         features: [
                           "Up to 20 team members",
                           "50GB storage",
@@ -501,7 +619,8 @@ export default function LandingPage() {
                       {
                         title: "Enterprise",
                         price: "$149",
-                        description: "For large organizations with advanced needs and dedicated support.",
+                        description:
+                          "For large organizations with advanced needs and dedicated support.",
                         features: [
                           "Unlimited team members",
                           "500GB storage",
@@ -518,7 +637,11 @@ export default function LandingPage() {
                     ].map((plan, index) => (
                       <Card
                         key={index}
-                        className={`flex flex-col ${plan.popular ? "border-2 border-blue-200 shadow-lg" : ""}`}
+                        className={`flex flex-col ${
+                          plan.popular
+                            ? "border-2 border-blue-200 shadow-lg"
+                            : ""
+                        }`}
                       >
                         {plan.popular && (
                           <div className="absolute top-0 right-0 -mt-2 -mr-2">
@@ -530,8 +653,12 @@ export default function LandingPage() {
                         <CardHeader>
                           <CardTitle>{plan.title}</CardTitle>
                           <div className="flex items-baseline gap-1">
-                            <span className="text-3xl font-bold">{plan.price}</span>
-                            <span className="text-muted-foreground">/month</span>
+                            <span className="text-3xl font-bold">
+                              {plan.price}
+                            </span>
+                            <span className="text-muted-foreground">
+                              /month
+                            </span>
                           </div>
                           <CardDescription>{plan.description}</CardDescription>
                         </CardHeader>
@@ -548,7 +675,11 @@ export default function LandingPage() {
                         <CardFooter>
                           <Button
                             asChild
-                            className={`w-full ${plan.popular ? `bg-gradient-to-r ${plan.color} hover:brightness-110` : "bg-white hover:bg-gray-100 text-gray-800 border border-gray-300"}`}
+                            className={`w-full ${
+                              plan.popular
+                                ? `bg-gradient-to-r ${plan.color} hover:brightness-110`
+                                : "bg-white hover:bg-gray-100 text-gray-800 border border-gray-300"
+                            }`}
                             variant={plan.popular ? "default" : "outline"}
                           >
                             <Link href="/signup">Get Started</Link>
@@ -564,15 +695,22 @@ export default function LandingPage() {
                       {
                         title: "Starter",
                         price: "$79",
-                        description: "Perfect for individuals and small teams just getting started.",
-                        features: ["Up to 5 team members", "5GB storage", "Basic fraud detection", "24/7 support"],
+                        description:
+                          "Perfect for individuals and small teams just getting started.",
+                        features: [
+                          "Up to 5 team members",
+                          "5GB storage",
+                          "Basic fraud detection",
+                          "24/7 support",
+                        ],
                         popular: false,
                         color: "from-purple-600 to-blue-500",
                       },
                       {
                         title: "Professional",
                         price: "$199",
-                        description: "Ideal for growing teams that need more features and flexibility.",
+                        description:
+                          "Ideal for growing teams that need more features and flexibility.",
                         features: [
                           "Up to 20 team members",
                           "50GB storage",
@@ -587,7 +725,8 @@ export default function LandingPage() {
                       {
                         title: "Enterprise",
                         price: "$399",
-                        description: "For large organizations with advanced needs and dedicated support.",
+                        description:
+                          "For large organizations with advanced needs and dedicated support.",
                         features: [
                           "Unlimited team members",
                           "500GB storage",
@@ -604,7 +743,11 @@ export default function LandingPage() {
                     ].map((plan, index) => (
                       <Card
                         key={index}
-                        className={`flex flex-col ${plan.popular ? "border-2 border-blue-200 shadow-lg" : ""}`}
+                        className={`flex flex-col ${
+                          plan.popular
+                            ? "border-2 border-blue-200 shadow-lg"
+                            : ""
+                        }`}
                       >
                         {plan.popular && (
                           <div className="absolute top-0 right-0 -mt-2 -mr-2">
@@ -616,8 +759,12 @@ export default function LandingPage() {
                         <CardHeader>
                           <CardTitle>{plan.title}</CardTitle>
                           <div className="flex items-baseline gap-1">
-                            <span className="text-3xl font-bold">{plan.price}</span>
-                            <span className="text-muted-foreground">/quarter</span>
+                            <span className="text-3xl font-bold">
+                              {plan.price}
+                            </span>
+                            <span className="text-muted-foreground">
+                              /quarter
+                            </span>
                           </div>
                           <CardDescription>{plan.description}</CardDescription>
                         </CardHeader>
@@ -634,7 +781,11 @@ export default function LandingPage() {
                         <CardFooter>
                           <Button
                             asChild
-                            className={`w-full ${plan.popular ? `bg-gradient-to-r ${plan.color} hover:brightness-110` : "bg-white hover:bg-gray-100 text-gray-800 border border-gray-300"}`}
+                            className={`w-full ${
+                              plan.popular
+                                ? `bg-gradient-to-r ${plan.color} hover:brightness-110`
+                                : "bg-white hover:bg-gray-100 text-gray-800 border border-gray-300"
+                            }`}
                             variant={plan.popular ? "default" : "outline"}
                           >
                             <Link href="/signup">Get Started</Link>
@@ -650,15 +801,22 @@ export default function LandingPage() {
                       {
                         title: "Starter",
                         price: "$290",
-                        description: "Perfect for individuals and small teams just getting started.",
-                        features: ["Up to 5 team members", "5GB storage", "Basic fraud detection", "24/7 support"],
+                        description:
+                          "Perfect for individuals and small teams just getting started.",
+                        features: [
+                          "Up to 5 team members",
+                          "5GB storage",
+                          "Basic fraud detection",
+                          "24/7 support",
+                        ],
                         popular: false,
                         color: "from-purple-600 to-blue-500",
                       },
                       {
                         title: "Professional",
                         price: "$790",
-                        description: "Ideal for growing teams that need more features and flexibility.",
+                        description:
+                          "Ideal for growing teams that need more features and flexibility.",
                         features: [
                           "Up to 20 team members",
                           "50GB storage",
@@ -673,7 +831,8 @@ export default function LandingPage() {
                       {
                         title: "Enterprise",
                         price: "$1,490",
-                        description: "For large organizations with advanced needs and dedicated support.",
+                        description:
+                          "For large organizations with advanced needs and dedicated support.",
                         features: [
                           "Unlimited team members",
                           "500GB storage",
@@ -690,7 +849,11 @@ export default function LandingPage() {
                     ].map((plan, index) => (
                       <Card
                         key={index}
-                        className={`flex flex-col ${plan.popular ? "border-2 border-blue-200 shadow-lg" : ""}`}
+                        className={`flex flex-col ${
+                          plan.popular
+                            ? "border-2 border-blue-200 shadow-lg"
+                            : ""
+                        }`}
                       >
                         {plan.popular && (
                           <div className="absolute top-0 right-0 -mt-2 -mr-2">
@@ -702,7 +865,9 @@ export default function LandingPage() {
                         <CardHeader>
                           <CardTitle>{plan.title}</CardTitle>
                           <div className="flex items-baseline gap-1">
-                            <span className="text-3xl font-bold">{plan.price}</span>
+                            <span className="text-3xl font-bold">
+                              {plan.price}
+                            </span>
                             <span className="text-muted-foreground">/year</span>
                           </div>
                           <CardDescription>{plan.description}</CardDescription>
@@ -720,7 +885,11 @@ export default function LandingPage() {
                         <CardFooter>
                           <Button
                             asChild
-                            className={`w-full ${plan.popular ? `bg-gradient-to-r ${plan.color} hover:brightness-110` : "bg-white hover:bg-gray-100 text-gray-800 border border-gray-300"}`}
+                            className={`w-full ${
+                              plan.popular
+                                ? `bg-gradient-to-r ${plan.color} hover:brightness-110`
+                                : "bg-white hover:bg-gray-100 text-gray-800 border border-gray-300"
+                            }`}
                             variant={plan.popular ? "default" : "outline"}
                           >
                             <Link href="/signup">Get Started</Link>
@@ -736,16 +905,22 @@ export default function LandingPage() {
         </section>
 
         {/* Testimonials Section */}
-        <section id="testimonials" className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-purple-50 to-white">
+        <section
+          id="testimonials"
+          className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-purple-50 to-white"
+        >
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-3 py-1 text-sm text-white">
                   Testimonials
                 </div>
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">What our customers say</h2>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+                  What our customers say
+                </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Don&apos;t just take our word for it. Here&apos;s what our customers have to say about our platform.
+                  Don&apos;t just take our word for it. Here&apos;s what our
+                  customers have to say about our platform.
                 </p>
               </div>
             </div>
@@ -756,7 +931,7 @@ export default function LandingPage() {
                     "The fraud detection system has saved us thousands of dollars in potential chargebacks. It's incredibly accurate and easy to use.",
                   author: "Sarah Johnson",
                   role: "Payment Manager at TechCorp",
-                  avatar: "/placeholder.svg?height=40&width=40",
+                  avatar: "images/sarah-johnson.jpg",
                   color: "border-purple-200",
                 },
                 {
@@ -764,7 +939,7 @@ export default function LandingPage() {
                     "Smart payment routing has increased our approval rates by 15%. The AI makes intelligent decisions that have directly improved our bottom line.",
                   author: "Michael Chen",
                   role: "CTO at StartupX",
-                  avatar: "/placeholder.svg?height=40&width=40",
+                  avatar: "images/michael-chen.jpg",
                   color: "border-blue-200",
                 },
                 {
@@ -772,15 +947,20 @@ export default function LandingPage() {
                     "The revenue forecasting feature has transformed how we plan our business growth. It's remarkably accurate and gives us confidence in our financial projections.",
                   author: "Emily Rodriguez",
                   role: "CFO at GrowthCo",
-                  avatar: "/placeholder.svg?height=40&width=40",
+                  avatar: "images/emily-rodriguez.jpg",
                   color: "border-indigo-200",
                 },
               ].map((testimonial, index) => (
-                <Card key={index} className={`text-left border-2 ${testimonial.color} hover:shadow-md transition-all`}>
+                <Card
+                  key={index}
+                  className={`text-left border-2 ${testimonial.color} hover:shadow-md transition-all`}
+                >
                   <CardContent className="p-6">
                     <div className="flex flex-col gap-4">
                       <div className="flex-1">
-                        <p className="text-muted-foreground">&quot;{testimonial.quote}&quot;</p>
+                        <p className="text-muted-foreground">
+                          &quot;{testimonial.quote}&quot;
+                        </p>
                       </div>
                       <div className="flex items-center gap-4">
                         <Image
@@ -792,7 +972,9 @@ export default function LandingPage() {
                         />
                         <div>
                           <p className="font-medium">{testimonial.author}</p>
-                          <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {testimonial.role}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -810,7 +992,9 @@ export default function LandingPage() {
               <div className="inline-block rounded-lg bg-gradient-to-r from-purple-600 to-blue-500 px-3 py-1 text-sm text-white">
                 FAQ
               </div>
-              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">Frequently asked questions</h2>
+              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+                Frequently asked questions
+              </h2>
               <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed">
                 Everything you need to know about our payment platform.
               </p>
@@ -840,7 +1024,9 @@ export default function LandingPage() {
                 },
               ].map((item, i) => (
                 <div key={i} className="rounded-lg border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold mb-2">{item.question}</h3>
+                  <h3 className="text-lg font-semibold mb-2">
+                    {item.question}
+                  </h3>
                   <p className="text-muted-foreground">{item.answer}</p>
                 </div>
               ))}
@@ -853,9 +1039,12 @@ export default function LandingPage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2 max-w-3xl">
-                <h2 className="text-3xl font-bold tracking-tighter md:text-5xl">Ready to secure your payments?</h2>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-5xl">
+                  Ready to secure your payments?
+                </h2>
                 <p className="text-xl text-white/80 md:text-2xl/relaxed">
-                  Join thousands of businesses that use our platform to process payments securely and efficiently.
+                  Join thousands of businesses that use our platform to process
+                  payments securely and efficiently.
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row mt-6">
@@ -866,7 +1055,8 @@ export default function LandingPage() {
                   asChild
                 >
                   <Link href="/signup">
-                    Start Your Free Trial <ArrowRight className="ml-2 h-4 w-4" />
+                    Start Your Free Trial{" "}
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
                 <Button
@@ -878,7 +1068,9 @@ export default function LandingPage() {
                   <Link href="#pricing">View Pricing</Link>
                 </Button>
               </div>
-              <div className="mt-8 text-sm text-white/60">No credit card required. 14-day free trial.</div>
+              <div className="mt-8 text-sm text-white/60">
+                No credit card required. 14-day free trial.
+              </div>
             </div>
           </div>
         </section>
@@ -896,29 +1088,42 @@ export default function LandingPage() {
                 </span>
               </div>
               <p className="text-sm text-muted-foreground">
-                Secure your payments and optimize your revenue with our AI-powered platform.
+                Secure your payments and optimize your revenue with our
+                AI-powered platform.
               </p>
             </div>
             <div className="space-y-4">
               <h3 className="text-sm font-medium">Product</h3>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <Link href="#features" className="text-muted-foreground transition-colors hover:text-foreground">
+                  <Link
+                    href="#features"
+                    className="text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Features
                   </Link>
                 </li>
                 <li>
-                  <Link href="#pricing" className="text-muted-foreground transition-colors hover:text-foreground">
+                  <Link
+                    href="#pricing"
+                    className="text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Pricing
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-muted-foreground transition-colors hover:text-foreground">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Integrations
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-muted-foreground transition-colors hover:text-foreground">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     API Documentation
                   </Link>
                 </li>
@@ -928,22 +1133,34 @@ export default function LandingPage() {
               <h3 className="text-sm font-medium">Company</h3>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <Link href="#" className="text-muted-foreground transition-colors hover:text-foreground">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-muted-foreground transition-colors hover:text-foreground">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Blog
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-muted-foreground transition-colors hover:text-foreground">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Careers
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-muted-foreground transition-colors hover:text-foreground">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Contact
                   </Link>
                 </li>
@@ -953,17 +1170,26 @@ export default function LandingPage() {
               <h3 className="text-sm font-medium">Legal</h3>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <Link href="#" className="text-muted-foreground transition-colors hover:text-foreground">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Terms of Service
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-muted-foreground transition-colors hover:text-foreground">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-muted-foreground transition-colors hover:text-foreground">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground transition-colors hover:text-foreground"
+                  >
                     Cookie Policy
                   </Link>
                 </li>
@@ -976,6 +1202,5 @@ export default function LandingPage() {
         </div>
       </footer>
     </div>
-  )
+  );
 }
-

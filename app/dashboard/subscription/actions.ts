@@ -133,7 +133,7 @@ export async function createCheckoutSession(formData: FormData) {
         mode: "subscription",
         billing_address_collection: "required",
         success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true`,
-        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription?canceled=true`,
+        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/subscription?canceled=true`,
       });
 
       if (session.url) {
@@ -153,7 +153,7 @@ export async function createCheckoutSession(formData: FormData) {
         form_design_name: "form-design",
         product_price_id: solidgatePriceId,
         success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true`,
-        fail_url: `${process.env.NEXT_PUBLIC_APP_URL}/subscription?canceled=true`,
+        fail_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/subscription?canceled=true`,
       });
 
       return {

@@ -32,12 +32,6 @@ export function DashboardContent() {
             Overview
           </TabsTrigger>
           <TabsTrigger
-            value="analytics"
-            className="rounded-md px-4 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-500 data-[state=active]:text-white"
-          >
-            Analytics
-          </TabsTrigger>
-          <TabsTrigger
             value="reports"
             className="rounded-md px-4 py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-500 data-[state=active]:text-white"
           >

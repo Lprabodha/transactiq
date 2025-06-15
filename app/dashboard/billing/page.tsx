@@ -103,7 +103,7 @@ export default async function BillingPage() {
 
   const userData = await getUserById(currentUser.id)
   if (!userData?.plan_id || userData.plan_id === 0) {
-    redirect("/subscription")
+    redirect("/dashboard/subscription")
   }
 
   const expirationDate = userData.plan_expire_date
