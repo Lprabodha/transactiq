@@ -163,7 +163,7 @@ export default function LandingPage() {
               <div className="relative lg:order-last">
                 <div className="absolute -top-4 -right-4 h-72 w-72 rounded-full bg-purple-100 blur-3xl"></div>
                 <Image
-                  src="images/placeholder.jpg?height=550&width=550"
+                  src="images/E-Wallet-pana.png?height=550&width=550"
                   width={550}
                   height={550}
                   alt="Secure payment platform dashboard"
