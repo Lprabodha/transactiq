@@ -74,6 +74,55 @@ export async function getOrCreateStripeCustomer() {
   }
 }
 
+export async function updateSolidgateUser(
+  planId: string
+) {
+  try {
+    const client = await clientPromise;
+    const uri =
+      process.env.MONGODB_URI || "mongodb://localhost:27017/transactIQ";
+    const dbName = getDatabaseName(uri);
+    const db = client.db(dbName);
+    const usersCollection = db.collection("users");
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser) {
+      return { error: "User not authenticated" };
+    }
+
+    let UsePlanId: number;
+    switch (planId) {
+      case "monthly":
+        UsePlanId = 1;
+        break;
+      case "quarterly":
+        UsePlanId = 3;
+        break;
+      case "annual":
+        UsePlanId = 12;
+        break;
+      default:
+        UsePlanId = 1;
+        break;
+    }
+
+    await usersCollection.updateOne(
+      { _id: new ObjectId(currentUser.id) },
+      {
+        $set: {
+          plan_id: UsePlanId,
+          updatedAt: new Date(),
+        },
+      }
+    );
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating Solidgate user:", error);
+    return { error: "Failed to update Solidgate user" };
+  }
+}
+
 export async function createCheckoutSession(formData: FormData) {
   const plan = formData.get("plan") as string;
   const billingCycle = formData.get("billingCycle") as string;

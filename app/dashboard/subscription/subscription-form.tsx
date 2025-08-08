@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useToast } from "@/components/ui/use-toast"
-import { createCheckoutSession, getOrCreateStripeCustomer } from "./actions"
+import { createCheckoutSession, getOrCreateStripeCustomer, updateSolidgateUser } from "./actions"
 import { Badge } from "@/components/ui/badge"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
@@ -151,6 +151,10 @@ function initializePaymentForm(merchant: string, signature: string, paymentInten
       subscription_id,
       plan_id: planId,
     })
+
+    updateSolidgateUser(planId)
+    
+
     window.location.replace(`/dashboard/billing?${params.toString()}`)
   })
 
