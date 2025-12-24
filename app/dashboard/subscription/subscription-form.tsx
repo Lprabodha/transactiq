@@ -278,16 +278,16 @@ export function SubscriptionForm() {
               return (
                 <Card
                   key={plan.id}
-                  className={`relative border-2 cursor-pointer transition-all hover:shadow-md ${
+                  className={`relative border-2 cursor-pointer transition-all hover:shadow-lg ${
                     selectedPlan === plan.id
-                      ? "border-primary shadow-md ring-2 ring-primary/20"
-                      : "border-gray-200 hover:border-gray-300"
+                      ? "border-purple-400 shadow-lg ring-2 ring-purple-200 bg-gradient-to-br from-purple-50/50 to-blue-50/50"
+                      : "border-gray-200 hover:border-purple-200 hover:bg-gradient-to-br hover:from-purple-50/30 hover:to-blue-50/30"
                   }`}
                   onClick={() => setSelectedPlan(plan.id)}
                 >
                   {plan.recommended && (
-                    <div className="absolute -top-3 left-0 right-0 flex justify-center">
-                      <Badge className="bg-gradient-to-r from-purple-600 to-blue-500 px-3 py-1 text-white">
+                    <div className="absolute -top-3 left-0 right-0 flex justify-center z-10">
+                      <Badge className="bg-gradient-to-r from-purple-600 to-blue-500 px-3 py-1 text-white shadow-md">
                         <Sparkles className="h-3.5 w-3.5 mr-1" />
                         Recommended
                       </Badge>
@@ -312,7 +312,11 @@ export function SubscriptionForm() {
                       </div>
 
                       <div className="flex items-end gap-1">
-                        <span className="text-3xl font-bold">{plan.price}</span>
+                        <span className={`text-3xl font-bold ${
+                          selectedPlan === plan.id 
+                            ? "bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent"
+                            : ""
+                        }`}>{plan.price}</span>
                         <span className="text-sm text-muted-foreground">/{plan.cycle}</span>
                       </div>
 
@@ -331,14 +335,21 @@ export function SubscriptionForm() {
                   <CardFooter className="p-6 pt-0">
                     <Button
                       variant={selectedPlan === plan.id ? "default" : "outline"}
-                      className={`w-full ${
+                      className={`w-full transition-all ${
                         selectedPlan === plan.id
-                          ? "bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600"
-                          : ""
+                          ? "bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white shadow-md hover:shadow-lg"
+                          : "border-purple-200 hover:bg-purple-50 hover:border-purple-300"
                       }`}
                       onClick={() => setSelectedPlan(plan.id)}
                     >
-                      {selectedPlan === plan.id ? "Selected" : "Select Plan"}
+                      {selectedPlan === plan.id ? (
+                        <>
+                          <Check className="h-4 w-4 mr-2" />
+                          Selected
+                        </>
+                      ) : (
+                        "Select Plan"
+                      )}
                     </Button>
                   </CardFooter>
                 </Card>
@@ -380,8 +391,8 @@ export function SubscriptionForm() {
                     key={key}
                     className={`border-2 cursor-pointer transition-all hover:shadow-lg ${
                       selectedGateway === key
-                        ? "border-primary shadow-md ring-2 ring-primary/20 bg-primary/5"
-                        : "border-gray-200 hover:border-gray-300"
+                        ? "border-purple-400 shadow-lg ring-2 ring-purple-200 bg-gradient-to-br from-purple-50/50 to-blue-50/50"
+                        : "border-gray-200 hover:border-purple-200 hover:bg-gradient-to-br hover:from-purple-50/30 hover:to-blue-50/30"
                     }`}
                     onClick={() => setSelectedGateway(key)}
                   >
@@ -430,21 +441,21 @@ export function SubscriptionForm() {
           )}
 
           {!showPaymentForm && (
-            <Card className="border-2 border-indigo-100 overflow-hidden">
+            <Card className="border-2 border-purple-200/50 overflow-hidden bg-gradient-to-br from-white to-purple-50/20 shadow-lg">
               <CardContent className="p-6 space-y-6">
                 <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 text-white">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 text-white shadow-md">
                     <Shield className="h-6 w-6" />
                   </div>
                   <div>
-                    <h3 className="font-medium text-lg">Secure Checkout</h3>
+                    <h3 className="font-semibold text-lg bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">Secure Checkout</h3>
                     <p className="text-sm text-muted-foreground">
                       All payments are protected by our advanced fraud detection system
                     </p>
                   </div>
                 </div>
 
-                <div className="rounded-lg border p-4 bg-gradient-to-r from-purple-50 to-blue-50">
+                <div className="rounded-lg border-2 border-purple-200/50 p-4 bg-gradient-to-br from-purple-50/50 to-blue-50/50">
                   <div className="text-sm font-medium mb-3">Order Summary</div>
                   <div className="space-y-2 mb-4">
                     <div className="flex justify-between">
@@ -516,47 +527,55 @@ export function SubscriptionForm() {
           )}
 
           {selectedGateway === "solidgate" && isFormLoading && (
-            <div className="mt-6 border rounded-lg p-6 bg-white shadow-sm flex items-center justify-center h-[300px]">
-              <div className="flex flex-col items-center gap-2">
-                <svg
-                  className="animate-spin h-8 w-8 text-blue-500"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                <span>Loading payment form...</span>
-              </div>
-            </div>
+            <Card className="mt-6 border-2 border-purple-200/50 bg-gradient-to-br from-white to-purple-50/20 shadow-lg">
+              <CardContent className="p-6 flex items-center justify-center h-[300px]">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="h-12 w-12 rounded-full bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center">
+                    <svg
+                      className="animate-spin h-6 w-6 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <span className="text-sm font-medium text-muted-foreground">Loading payment form...</span>
+                </div>
+              </CardContent>
+            </Card>
           )}
 
           {selectedGateway === "solidgate" && showPaymentForm && !isFormLoading && (
-            <div className="mt-6 border rounded-lg p-6 bg-white shadow-sm">
-              {/* Header: Solidgate logo and caption */}
-              <div className="flex items-center gap-3 mb-4">
-                <Image src="/solidgate.jpeg" alt="Solidgate" width={120} height={40} className="h-8 object-contain" />
-                <span className="text-sm text-muted-foreground">Secure payment processing</span>
-              </div>
+            <Card className="mt-6 border-2 border-purple-200/50 bg-gradient-to-br from-white to-purple-50/20 shadow-lg">
+              <CardContent className="p-6">
+                {/* Header: Solidgate logo and caption */}
+                <div className="flex items-center gap-3 mb-4">
+                  <Image src="/solidgate.jpeg" alt="Solidgate" width={120} height={40} className="h-8 object-contain" />
+                  <span className="text-sm text-muted-foreground">Secure payment processing</span>
+                </div>
 
-              {/* Solidgate Payment Form Mount Point */}
-              <div
-                id="solid-payment-form-container"
-                className="min-h-[300px] w-full bg-gray-50 border border-dashed border-gray-300 rounded-md p-4  flex items-center justify-center"
-                aria-label="Secure payment form"
-              />
+                {/* Solidgate Payment Form Mount Point */}
+                <div
+                  id="solid-payment-form-container"
+                  className="min-h-[300px] w-full bg-gradient-to-br from-purple-50/30 to-blue-50/30 border-2 border-dashed border-purple-200/50 rounded-lg p-4 flex items-center justify-center"
+                  aria-label="Secure payment form"
+                />
 
-              {/* Security info */}
-              <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
-                <Shield className="h-4 w-4 text-green-500" />
-                <span>Your payment details are encrypted and processed securely.</span>
-              </div>
-            </div>
+                {/* Security info */}
+                <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
+                  <div className="h-5 w-5 rounded-full bg-green-100 flex items-center justify-center">
+                    <Shield className="h-3 w-3 text-green-600" />
+                  </div>
+                  <span>Your payment details are encrypted and processed securely.</span>
+                </div>
+              </CardContent>
+            </Card>
           )}
 
           <div className="flex flex-col-reverse gap-3 md:flex-row md:justify-between md:gap-4 pt-2">

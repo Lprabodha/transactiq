@@ -51,17 +51,17 @@ export function DashboardContent() {
 
       <TabsContent value="overview" className="space-y-6">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="border-l-4 border-l-green-500 hover:shadow-md transition-all">
+          <Card className="border-l-4 border-l-green-500 hover:shadow-lg transition-all bg-gradient-to-br from-white to-green-50/30">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-              <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
-                <DollarSign className="h-4 w-4 text-green-600" />
+              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-md">
+                <DollarSign className="h-5 w-5 text-white" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">$45,231.89</div>
-              <div className="flex items-center mt-1">
-                <Badge className="bg-green-100 text-green-700 hover:bg-green-100 flex items-center gap-1">
+              <div className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">$45,231.89</div>
+              <div className="flex items-center mt-2">
+                <Badge className="bg-green-100 text-green-700 hover:bg-green-100 flex items-center gap-1 border-green-200">
                   <TrendingUp className="h-3 w-3" />
                   <span>20.1%</span>
                 </Badge>
@@ -70,17 +70,17 @@ export function DashboardContent() {
             </CardContent>
           </Card>
 
-          <Card className="border-l-4 border-l-blue-500 hover:shadow-md transition-all">
+          <Card className="border-l-4 border-l-blue-500 hover:shadow-lg transition-all bg-gradient-to-br from-white to-blue-50/30">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Subscriptions</CardTitle>
-              <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-                <CreditCard className="h-4 w-4 text-blue-600" />
+              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
+                <CreditCard className="h-5 w-5 text-white" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+2,350</div>
-              <div className="flex items-center mt-1">
-                <Badge className="bg-green-100 text-green-700 hover:bg-green-100 flex items-center gap-1">
+              <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">+2,350</div>
+              <div className="flex items-center mt-2">
+                <Badge className="bg-green-100 text-green-700 hover:bg-green-100 flex items-center gap-1 border-green-200">
                   <TrendingUp className="h-3 w-3" />
                   <span>180.1%</span>
                 </Badge>
@@ -89,17 +89,17 @@ export function DashboardContent() {
             </CardContent>
           </Card>
 
-          <Card className="border-l-4 border-l-purple-500 hover:shadow-md transition-all">
+          <Card className="border-l-4 border-l-purple-500 hover:shadow-lg transition-all bg-gradient-to-br from-white to-purple-50/30">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Active Users</CardTitle>
-              <div className="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center">
-                <Users className="h-4 w-4 text-purple-600" />
+              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-md">
+                <Users className="h-5 w-5 text-white" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+12,234</div>
-              <div className="flex items-center mt-1">
-                <Badge className="bg-green-100 text-green-700 hover:bg-green-100 flex items-center gap-1">
+              <div className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">+12,234</div>
+              <div className="flex items-center mt-2">
+                <Badge className="bg-green-100 text-green-700 hover:bg-green-100 flex items-center gap-1 border-green-200">
                   <TrendingUp className="h-3 w-3" />
                   <span>19%</span>
                 </Badge>
@@ -108,17 +108,17 @@ export function DashboardContent() {
             </CardContent>
           </Card>
 
-          <Card className="border-l-4 border-l-amber-500 hover:shadow-md transition-all">
+          <Card className="border-l-4 border-l-amber-500 hover:shadow-lg transition-all bg-gradient-to-br from-white to-amber-50/30">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Active Now</CardTitle>
-              <div className="h-8 w-8 rounded-full bg-amber-100 flex items-center justify-center">
-                <Activity className="h-4 w-4 text-amber-600" />
+              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-md">
+                <Activity className="h-5 w-5 text-white" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+573</div>
-              <div className="flex items-center mt-1">
-                <Badge className="bg-green-100 text-green-700 hover:bg-green-100 flex items-center gap-1">
+              <div className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">+573</div>
+              <div className="flex items-center mt-2">
+                <Badge className="bg-green-100 text-green-700 hover:bg-green-100 flex items-center gap-1 border-green-200">
                   <TrendingUp className="h-3 w-3" />
                   <span>201</span>
                 </Badge>
@@ -129,33 +129,33 @@ export function DashboardContent() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-          <Card className="col-span-4 hover:shadow-md transition-all">
+          <Card className="col-span-4 hover:shadow-lg transition-all border-2 border-purple-100/50 bg-gradient-to-br from-white to-purple-50/20">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-semibold">Revenue Overview</CardTitle>
+                <CardTitle className="text-lg font-semibold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">Revenue Overview</CardTitle>
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-50">
+                  <Badge variant="outline" className="bg-gradient-to-r from-purple-50 to-blue-50 text-purple-700 border-purple-200 hover:from-purple-100 hover:to-blue-100">
                     Monthly
                   </Badge>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <BarChart2 className="h-4 w-4" />
+                  <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-purple-100">
+                    <BarChart2 className="h-4 w-4 text-purple-600" />
                   </Button>
                 </div>
               </div>
               <CardDescription>Daily revenue for the past 30 days</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-[240px] w-full rounded-md bg-gradient-to-b from-primary/10 to-primary/5 flex items-end p-4">
+              <div className="h-[240px] w-full rounded-lg bg-gradient-to-b from-purple-50/50 to-blue-50/50 flex items-end p-4 border border-purple-100/30">
                 {/* Simulated chart bars */}
                 {Array.from({ length: 30 }).map((_, i) => (
                   <div key={i} className="h-full flex-1 mx-0.5 flex flex-col justify-end group">
                     <div
-                      className="bg-gradient-to-t from-primary to-primary/80 rounded-t-sm group-hover:bg-primary/90 transition-all relative"
+                      className="bg-gradient-to-t from-purple-600 via-purple-500 to-blue-500 rounded-t-sm group-hover:from-purple-700 group-hover:via-purple-600 group-hover:to-blue-600 transition-all relative shadow-sm group-hover:shadow-md"
                       style={{
                         height: `${Math.max(15, Math.floor(Math.random() * 100))}%`,
                       }}
                     >
-                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-foreground text-background text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-blue-500 text-white text-xs py-1 px-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity shadow-lg whitespace-nowrap z-10">
                         ${Math.floor(Math.random() * 1000) + 500}
                       </div>
                     </div>
@@ -169,12 +169,12 @@ export function DashboardContent() {
             </CardFooter>
           </Card>
 
-          <Card className="col-span-3 hover:shadow-md transition-all">
+          <Card className="col-span-3 hover:shadow-lg transition-all border-2 border-blue-100/50 bg-gradient-to-br from-white to-blue-50/20">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-semibold">Recent Sales</CardTitle>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <PieChart className="h-4 w-4" />
+                <CardTitle className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Recent Sales</CardTitle>
+                <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-blue-100">
+                  <PieChart className="h-4 w-4 text-blue-600" />
                 </Button>
               </div>
               <CardDescription>You made 265 sales this month</CardDescription>

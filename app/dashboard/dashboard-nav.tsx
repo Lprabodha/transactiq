@@ -30,11 +30,6 @@ export function DashboardNav() {
       icon: Home,
     },
     {
-      title: "Account",
-      href: "/dashboard/account",
-      icon: User,
-    },
-    {
       title: "Billing",
       href: "/dashboard/billing",
       icon: CreditCard,

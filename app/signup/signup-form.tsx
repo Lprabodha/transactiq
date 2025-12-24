@@ -160,7 +160,11 @@ export function SignupForm() {
           )}
         />
 
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <Button 
+          type="submit" 
+          className="w-full bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white shadow-lg hover:shadow-xl transition-all" 
+          disabled={isLoading}
+        >
           {isLoading ? "Creating account..." : "Create account"}
         </Button>
       </form>
